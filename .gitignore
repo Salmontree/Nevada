@@ -1,0 +1,5 @@
+/.cache
+/.vscode
+/build
+/mate
+/compile_commands.json
