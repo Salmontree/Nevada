@@ -1,1 +1,5 @@
-var i: int = _100
+@import(std::println);
+
+fn main() {
+    @println("Hello, {}", "World!");
+}

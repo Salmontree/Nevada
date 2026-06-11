@@ -1,0 +1,9 @@
+macro hello_world {
+    () => {
+        std::println("Hello, World!")
+    };
+}
+
+fn main() {
+    @hello_world();
+}

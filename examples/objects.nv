@@ -1,0 +1,21 @@
+type WorkState: enum {
+    Employed(job: String);
+    Unemployed();
+}
+
+type Person: struct {
+    pub name: String;
+    pub age: u8;
+    prv work: WorkState;
+    prv birthday: struct {
+        u8 day;
+        u8 month;
+        u8 year;
+
+        fn to_string(): String { return std::format("{}/{}/{}", self->day, self->month, self->year); }
+    };
+
+    pub fn get_birthday(): String {
+        return self->birthday.to_string();
+    }
+}
