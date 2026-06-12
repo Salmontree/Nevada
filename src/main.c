@@ -2,6 +2,7 @@
 #include <base.h>
 #include "nv_lexer.h"
 #include "nv_read.h"
+#include "nv_parser.h"
 
 int main(int argc, char** argv) {
 	// Init
