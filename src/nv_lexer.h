@@ -18,7 +18,12 @@
 	X(WHILE) \
 	X(VAR) \
 	X(MUT) \
+	X(PUB) \
+	X(PRV) \
 	X(FN) \
+	X(MACRO) \
+	X(TYPE) \
+	X(CLASS) \
 	X(STRUCT) \
 	X(ENUM) \
 	X(RETURN) \
@@ -38,7 +43,8 @@
 	X(COLON) \
 	X(COLONCOLON) \
 	X(SEMICOLON) \
-	X(MACRO) \
+	X(DOT) \
+	X(AT) \
 	X(LEFTPAREN) \
 	X(RIGHTPAREN) \
 	X(LEFTCURLY) \

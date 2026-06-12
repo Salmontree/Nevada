@@ -86,7 +86,8 @@ void NvLexer_Tokenize(Arena* arena, NvLexer_Tokenizer* lexer) {
 			OperatorCheck("::", COLONCOLON, 2)
 			OperatorCheck(":", COLON, 1)
 			OperatorCheck(";", SEMICOLON, 1)
-			OperatorCheck("@", MACRO, 1)
+			OperatorCheck(".", DOT, 1)
+			OperatorCheck("@", AT, 1)
 			OperatorCheck("(", LEFTPAREN, 1)
 			OperatorCheck(")", RIGHTPAREN, 1)
 			OperatorCheck("[", LEFTBRACKET, 1)
@@ -119,7 +120,12 @@ void NvLexer_Tokenize(Arena* arena, NvLexer_Tokenizer* lexer) {
 			if (StrEq(iden, S("while")))  { QuickPushToken(WHILE, iden, 0); continue; }
 			if (StrEq(iden, S("var")))    { QuickPushToken(VAR, iden, 0); continue; }
 			if (StrEq(iden, S("mut")))    { QuickPushToken(MUT, iden, 0); continue; }
+			if (StrEq(iden, S("pub")))    { QuickPushToken(PUB, iden, 0); continue; }
+			if (StrEq(iden, S("prv")))    { QuickPushToken(PRV, iden, 0); continue; }
 			if (StrEq(iden, S("fn")))     { QuickPushToken(FN, iden, 0); continue; }
+			if (StrEq(iden, S("macro")))    { QuickPushToken(MACRO, iden, 0); continue; }
+			if (StrEq(iden, S("type")))    { QuickPushToken(TYPE, iden, 0); continue; }
+			if (StrEq(iden, S("class")))    { QuickPushToken(CLASS, iden, 0); continue; }
 			if (StrEq(iden, S("struct"))) { QuickPushToken(STRUCT, iden, 0); continue; }
 			if (StrEq(iden, S("enum")))   { QuickPushToken(ENUM, iden, 0); continue; }
 			if (StrEq(iden, S("return"))) { QuickPushToken(RETURN, iden, 0); continue; }
