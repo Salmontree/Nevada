@@ -52,7 +52,7 @@ const char* _NvLexer_FormatTokenType(NvLexer_TokenType type) {
 }
 void _NvLexer_PrintTokens(NvLexer_TokenVector tokens) {
 	for (size_t i = 0; i < tokens.length; i++) {
-		printf("[DEBUG] Token Data: type=%s, data='%s'\n", _NvLexer_FormatTokenType(tokens.data[i].type), tokens.data[i].data.data);
+		printf("[DEBUG] Token Data: type=%s, data={ data='%s', size=%zu }\n", _NvLexer_FormatTokenType(tokens.data[i].type), tokens.data[i].data.data, tokens.data[i].data.length);
 	}
 }
 
@@ -71,29 +71,33 @@ void NvLexer_Tokenize(Arena* arena, NvLexer_Tokenizer* lexer) {
 
 		// Operators
 		#define OperatorCheck(opdata, optype, adv) if ((size_t)StrFindFrom(lexer->source, S(opdata), lexer->pos.pos) == lexer->pos.pos) { QuickPushToken(optype, S(opdata), adv); continue; }
-		OperatorCheck("+", PLUS, 1)
-		OperatorCheck("-", DASH, 1)
-		OperatorCheck("*", STAR, 1)
-		OperatorCheck("/", SLASH, 1)
-		OperatorCheck("%", MOD, 1)
-		OperatorCheck("+%", ADDOVERFLOW, 2)
-		OperatorCheck("-%", SUBOVERFLOW, 2)
-		OperatorCheck("*%", MULOVERFLOW,2)
-		OperatorCheck("/%", DIVOVERFLOW, 2)
-		OperatorCheck("++", PLUSPLUS, 2)
-		OperatorCheck("--", DASHDASH, 2)
-		OperatorCheck(":", COLON, 1)
-		OperatorCheck("::", COLONCOLON, 2)
-		OperatorCheck("(", LEFTPAREN, 1)
-		OperatorCheck(")", RIGHTPAREN, 1)
-		OperatorCheck("[", LEFTBRACKET, 1)
-		OperatorCheck("]", RIGHTBRACKET, 1)
-		OperatorCheck("{", LEFTCURLY, 1)
-		OperatorCheck("}", RIGHTCURLY, 1)
-		OperatorCheck("<", LEFTANGLE, 1)
-		OperatorCheck(">", RIGHTANGLE, 1)
-		OperatorCheck(",", COMMA, 1)
-		OperatorCheck("=", EQUALS, 1)
+		{
+			OperatorCheck("+%", ADDOVERFLOW, 2)
+			OperatorCheck("-%", SUBOVERFLOW, 2)
+			OperatorCheck("*%", MULOVERFLOW,2)
+			OperatorCheck("/%", DIVOVERFLOW, 2)
+			OperatorCheck("++", PLUSPLUS, 2)
+			OperatorCheck("--", DASHDASH, 2)
+			OperatorCheck("+", PLUS, 1)
+			OperatorCheck("-", DASH, 1)
+			OperatorCheck("*", STAR, 1)
+			OperatorCheck("/", SLASH, 1)
+			OperatorCheck("%", MOD, 1)
+			OperatorCheck("::", COLONCOLON, 2)
+			OperatorCheck(":", COLON, 1)
+			OperatorCheck(";", SEMICOLON, 1)
+			OperatorCheck("@", MACRO, 1)
+			OperatorCheck("(", LEFTPAREN, 1)
+			OperatorCheck(")", RIGHTPAREN, 1)
+			OperatorCheck("[", LEFTBRACKET, 1)
+			OperatorCheck("]", RIGHTBRACKET, 1)
+			OperatorCheck("{", LEFTCURLY, 1)
+			OperatorCheck("}", RIGHTCURLY, 1)
+			OperatorCheck("<", LEFTANGLE, 1)
+			OperatorCheck(">", RIGHTANGLE, 1)
+			OperatorCheck(",", COMMA, 1)
+			OperatorCheck("=", EQUALS, 1)
+		}
 		#undef OperatorCheck
 
 		// Keywords, Booleans & Identifiers
@@ -126,6 +130,28 @@ void NvLexer_Tokenize(Arena* arena, NvLexer_Tokenizer* lexer) {
 			// Token is identifier; push that
 			QuickPushToken(IDENTIFIER, iden, 0);
 			continue;
+		}
+
+		// Strings
+		if (current == '\'' || current == '\"') {
+			// Get full string
+			const char* start = lexer->source.data + lexer->pos.pos;
+			size_t len = 2; // Accounting for both quotes
+
+			while (NvLexer_Next(lexer) != current) { len++; if (NvLexer_Current(lexer) == '\0') goto NvLexer_Tokenizer_NonterminatingString; }
+			NvLexer_Advance(lexer, 1);
+
+			char* str_cstr = ArenaAllocChars(arena, len + 1);
+			memcpy(str_cstr, start, len);
+			str_cstr[len] = '\0';
+			String str = s(str_cstr);
+
+			QuickPushToken(STRING, str, 0);
+			continue;
+
+			NvLexer_Tokenizer_NonterminatingString:
+			printf("NvLexer_Tokenize: Non-terminating String\n");
+			break;
 		}
 
 		// Numbers
