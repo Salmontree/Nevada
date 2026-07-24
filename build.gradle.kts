@@ -84,6 +84,7 @@ sourceSets {
 // Adds the Polyfrost maven repository so that we can get the libraries necessary to develop the mod.
 repositories {
     maven("https://repo.polyfrost.org/releases")
+    maven("https://repo.hypixel.net/repository/Hypixel/")
 }
 
 // Configures the libraries/dependencies for your mod.
@@ -93,6 +94,8 @@ dependencies {
 
     // Adds DevAuth, which we can use to log in to Minecraft in development.
     modRuntimeOnly("me.djtheredstoner:DevAuth-${if (platform.isFabric) "fabric" else if (platform.isLegacyForge) "forge-legacy" else "forge-latest"}:1.2.0")
+
+    shade("net.hypixel:hypixel-api-transport-apache:4.4")
 
     // If we are building for legacy forge, includes the launch wrapper with `shade` as we configured earlier, as well as mixin 0.7.11
     if (platform.isLegacyForge) {
