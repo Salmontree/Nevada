@@ -5,7 +5,7 @@ import com.ottertree.nevada.NevadaCommon;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value = "play", description = "/play <game> <mode>", aliases = {"p"})
+@Command(value = "play", description = "/play <game> <mode>")
 public class PlayCommand {
     @Main
     private void handle(String game, String mode) {
