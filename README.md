@@ -4,7 +4,7 @@
 
 ## Features
 
-# Commands
+### Commands
 
 - /play shortcuts
   - /play bw 1
