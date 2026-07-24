@@ -181,6 +181,9 @@ tasks {
         archiveClassifier.set("dev")
         configurations = listOf(shade, modShade)
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+        relocate("com.google.gson", "com.ottertree.nevada.shaded.gson")
+        relocate("org.apache.http", "com.ottertree.nevada.shaded.apachehttp")
     }
 
     remapJar {

@@ -14,6 +14,11 @@ public class NevadaConfig extends Config {
     @Text(name="Urchin", secure=true, category="API Keys")
     public String APIKeys_Urchin;
 
+    @Switch(name="Enable Tab Stats", category="Tab Stats")
+    public Boolean TabStats_Enable = true;
+    @Switch(name="Enable Tab Stats In Lobby", category="Tab Stats")
+    public Boolean TabStats_EnableInLobby = false;
+
     @Switch(name="Enable Urchin", category="Blacklists")
     public Boolean Blacklists_EnableUrchin = false;
 

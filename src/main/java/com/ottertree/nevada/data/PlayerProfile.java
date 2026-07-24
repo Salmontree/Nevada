@@ -12,6 +12,15 @@ public class PlayerProfile {
         public float getWLR() { return losses != 0.0f ? (float)wins / losses : 0.0f; }
     }
     public Bedwars bedwars = new Bedwars();
+
+    public static class BuildBattle {
+        public int score;
+        public int wins;
+        public int soloWins;
+        public int doublesWins;
+        public int gtbWins;
+    }
+    public BuildBattle buildbattle = new BuildBattle();
     
     public static class Hypixel {
         public String displayName;

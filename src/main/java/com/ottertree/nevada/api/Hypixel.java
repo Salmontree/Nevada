@@ -2,6 +2,7 @@ package com.ottertree.nevada.api;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,8 +25,9 @@ public class Hypixel {
     private static HypixelHttpClient client;
     private static HypixelAPI api;
 
-    private static final ExecutorService executor = Executors.newFixedThreadPool(4, new ThreadFactoryBuilder().setNameFormat("hypixel-api-%d").setDaemon(true).build());
-    private static final RateLimiter rateLimiter = RateLimiter.create(30.0);
+    private static final ExecutorService executor = Executors.newFixedThreadPool(12, new ThreadFactoryBuilder().setNameFormat("hypixel-api-%d").setDaemon(true).build());
+    private static final RateLimiter rateLimiter = RateLimiter.create(7.0);
+    private static final ConcurrentHashMap<String, CompletableFuture<PlayerProfile>> pendingRequests = new ConcurrentHashMap<>();
 
     public Hypixel() {
         client = new ApacheHttpClient(UUID.fromString(Nevada.config.APIKeys_Hypixel));
@@ -46,42 +48,59 @@ public class Hypixel {
         PlayerProfile cachedProfile = PlayerProfileCache.INSTANCE.getProfile(uuid);
         if (cachedProfile != null) { return CompletableFuture.completedFuture(cachedProfile); }
 
-        return CompletableFuture.supplyAsync(() -> { rateLimiter.acquire(); return null; }, executor).thenCompose(ignored -> api.getPlayerByUuid(uuid)).thenApply(playerReply -> {
-            Player player = playerReply.getPlayer();
-            PlayerProfile profile = new PlayerProfile();
+        return pendingRequests.computeIfAbsent(uuid, id ->
+            CompletableFuture.supplyAsync(() -> { rateLimiter.acquire(); return null; }, executor)
+                .thenCompose(ignored -> api.getPlayerByUuid(id))
+                .thenApply(playerReply -> buildProfile(id, playerReply.getPlayer()))
+                .whenComplete((profile, err) -> pendingRequests.remove(id))
+        );
+    }
 
-            // Format name with rank
-            if (!player.hasRank()) profile.hypixel.displayName = "§7" + player.getName();
-            else if (player.hasProperty("prefix")) profile.hypixel.displayName = player.getStringProperty("prefix", "§7[UNKNOWN] ") + " " + player.getName();
-            else switch (player.getHighestRank()) {
-                case "VIP": profile.hypixel.displayName = "§a[VIP] " + player.getName(); break;
-                case "VIP_PLUS": profile.hypixel.displayName = "§a[VIP§6+§a] " + player.getName(); break;
-                case "MVP": profile.hypixel.displayName = "§b[MVP] " + player.getName(); break;
-                case "MVP_PLUS": profile.hypixel.displayName = "§b[MVP" + colorCodeFromName(player.getSelectedPlusColor()) + "+§b] " + player.getName(); break;
-                case "SUPERSTAR": profile.hypixel.displayName = colorCodeFromName(player.getSuperstarTagColor()) + "[MVP" + colorCodeFromName(player.getSelectedPlusColor()) + "++" + colorCodeFromName(player.getSuperstarTagColor()) + "] " + player.getName(); break;
-                case "STAFF": profile.hypixel.displayName = "§c[§6ዞ§c] " + player.getName(); break;
-                case "YOUTUBER": profile.hypixel.displayName = "§c[§fYOUTUBE§c] " + player.getName(); break;
-                default: profile.hypixel.displayName = "§7" + player.getName(); break;
-            }
+    private static PlayerProfile buildProfile(String uuid, Player player) {
+        PlayerProfile profile = new PlayerProfile();
 
-            if (!player.exists()) {
-                PlayerProfileCache.INSTANCE.cacheProfile(uuid, profile);
-                return profile;
-            }
-
-            // Bedwars stats
-            if (player.getObjectProperty("stats").getAsJsonObject().has("Bedwars")) {
-                JsonObject bedwarsStats = player.getObjectProperty("stats").get("Bedwars").getAsJsonObject();
-                if (bedwarsStats.has("final_deaths_bedwars")) profile.bedwars.finalDeaths = bedwarsStats.get("final_deaths_bedwars").getAsInt();
-                if (bedwarsStats.has("final_kills_bedwars")) profile.bedwars.finalKills = bedwarsStats.get("final_kills_bedwars").getAsInt();
-                if (bedwarsStats.has("wins_bedwars")) profile.bedwars.wins = bedwarsStats.get("wins_bedwars").getAsInt();
-                if (bedwarsStats.has("losses_bedwars")) profile.bedwars.losses = bedwarsStats.get("losses_bedwars").getAsInt();
-                profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
-            }
-
+        if (player == null || !player.exists()) {
+            profile.hypixel.displayName = "§7Unknown";
             PlayerProfileCache.INSTANCE.cacheProfile(uuid, profile);
             return profile;
-        });
+        }
+
+        // Format name with rank
+        if (!player.hasRank()) profile.hypixel.displayName = "§7" + player.getName();
+        else if (player.hasProperty("prefix")) profile.hypixel.displayName = player.getStringProperty("prefix", "§7[UNKNOWN] ") + " " + player.getName();
+        else switch (player.getHighestRank()) {
+            case "VIP": profile.hypixel.displayName = "§a[VIP] " + player.getName(); break;
+            case "VIP_PLUS": profile.hypixel.displayName = "§a[VIP§6+§a] " + player.getName(); break;
+            case "MVP": profile.hypixel.displayName = "§b[MVP] " + player.getName(); break;
+            case "MVP_PLUS": profile.hypixel.displayName = "§b[MVP" + colorCodeFromName(player.getSelectedPlusColor()) + "+§b] " + player.getName(); break;
+            case "SUPERSTAR": profile.hypixel.displayName = colorCodeFromName(player.getSuperstarTagColor()) + "[MVP" + colorCodeFromName(player.getSelectedPlusColor()) + "++" + colorCodeFromName(player.getSuperstarTagColor()) + "] " + player.getName(); break;
+            case "STAFF": profile.hypixel.displayName = "§c[§6ዞ§c] " + player.getName(); break;
+            case "YOUTUBER": profile.hypixel.displayName = "§c[§fYOUTUBE§c] " + player.getName(); break;
+            default: profile.hypixel.displayName = "§7" + player.getName(); break;
+        }
+
+        // Bedwars stats
+        if (player.getObjectProperty("stats").getAsJsonObject().has("Bedwars")) {
+            JsonObject stats = player.getObjectProperty("stats").get("Bedwars").getAsJsonObject();
+            if (stats.has("final_deaths_bedwars")) profile.bedwars.finalDeaths = stats.get("final_deaths_bedwars").getAsInt();
+            if (stats.has("final_kills_bedwars")) profile.bedwars.finalKills = stats.get("final_kills_bedwars").getAsInt();
+            if (stats.has("wins_bedwars")) profile.bedwars.wins = stats.get("wins_bedwars").getAsInt();
+            if (stats.has("losses_bedwars")) profile.bedwars.losses = stats.get("losses_bedwars").getAsInt();
+            profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
+        }
+
+        // Build Battle stats
+        if (player.getObjectProperty("stats").getAsJsonObject().has("BuildBattle")) {
+            JsonObject stats = player.getObjectProperty("stats").get("BuildBattle").getAsJsonObject();
+            if (stats.has("score")) profile.buildbattle.score = stats.get("score").getAsInt();
+            if (stats.has("wins")) profile.buildbattle.wins = stats.get("wins").getAsInt();
+            if (stats.has("wins_solo_normal")) profile.buildbattle.soloWins = stats.get("wins_solo_normal").getAsInt();
+            if (stats.has("wins_doubles_normal")) profile.buildbattle.doublesWins = stats.get("wins_doubles_normal").getAsInt();
+            if (stats.has("wins_guess_the_build")) profile.buildbattle.gtbWins = stats.get("wins_guess_the_build").getAsInt();
+        }
+
+        PlayerProfileCache.INSTANCE.cacheProfile(uuid, profile);
+        return profile;
     }
 
     private static String colorCodeFromName(String color) {

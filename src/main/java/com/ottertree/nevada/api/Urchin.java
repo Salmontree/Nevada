@@ -25,14 +25,14 @@ public class Urchin {
     public static final Urchin INSTANCE = new Urchin();
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4, new ThreadFactoryBuilder().setNameFormat("urchin-api-%d").setDaemon(true).build());
-    private static final RateLimiter rateLimiter = RateLimiter.create(1.0);
+    private static final RateLimiter rateLimiter = RateLimiter.create(30.0);
 
     public Urchin() {}
 
     public CompletableFuture<List<Tag>> getPlayerTaglist(String name) {
         if (name == null || name.isEmpty()) {
             CompletableFuture<List<Tag>> failed = new CompletableFuture<>();
-            failed.completeExceptionally(new IllegalArgumentException("Player not found"));
+            failed.completeExceptionally(new Exception("Player not found"));
             return failed;
         }
 
