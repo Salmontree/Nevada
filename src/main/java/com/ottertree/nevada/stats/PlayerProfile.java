@@ -1,5 +1,9 @@
 package com.ottertree.nevada.stats;
 
+import java.util.ArrayList;
+
+import com.ottertree.nevada.blacklist.Tag;
+
 public class PlayerProfile {
     public int bedwarsFinalKills;
     public int bedwarsFinalDeaths;
@@ -16,4 +20,5 @@ public class PlayerProfile {
     public String hypixelDisplayName;
     public String hypixelDisplayNameRankless;
     public String hypixelStatus;
+    public ArrayList<Tag> tags;
 }

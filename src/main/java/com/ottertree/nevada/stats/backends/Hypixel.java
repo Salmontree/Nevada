@@ -3,17 +3,108 @@ package com.ottertree.nevada.stats.backends;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.google.common.util.concurrent.RateLimiter;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ottertree.nevada.NevadaConfig;
+import com.ottertree.nevada.config.NevadaConfig;
 import com.ottertree.nevada.api.MojangAPI;
+import com.ottertree.nevada.cache.PlayerProfileCache;
 import com.ottertree.nevada.stats.PlayerProfile;
 import com.ottertree.nevada.stats.StatCheckAPI;
+import com.ottertree.nevada.util.BedwarsUtil;
 
 public class Hypixel implements StatCheckAPI {
+    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(4, new ThreadFactoryBuilder().setNameFormat("hypixel-api-%d").setDaemon(true).build());
+    private static final RateLimiter API_RATE_LIMITER = RateLimiter.create(67.0);
+    private static final ConcurrentHashMap<String, CompletableFuture<PlayerProfile>> IN_FLIGHT = new ConcurrentHashMap<>();
+ 
+    public static CompletableFuture<PlayerProfile> getPlayerProfileAsync(String identifier) {
+        if (identifier == null || identifier.isEmpty()) {
+            CompletableFuture<PlayerProfile> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new IOException("Player not found"));
+            return failed;
+        }
+ 
+        PlayerProfile cached = PlayerProfileCache.getCached(identifier);
+        if (cached != null) {
+            return CompletableFuture.completedFuture(cached);
+        }
+ 
+        String key = identifier.toLowerCase();
+        return IN_FLIGHT.computeIfAbsent(key, k -> {
+            CompletableFuture<PlayerProfile> future = CompletableFuture.supplyAsync(() -> {
+                API_RATE_LIMITER.acquire(); // blocks this pool thread, never the caller's thread
+                try {
+                    return getPlayerProfileBlocking(identifier);
+                } catch (IOException e) {
+                    throw new CompletionException(e);
+                }
+            }, EXECUTOR);
+ 
+            future.whenComplete((result, error) -> IN_FLIGHT.remove(key));
+            return future;
+        });
+    }
+
+    private static PlayerProfile getPlayerProfileBlocking(String identifier) throws IOException {
+        if (identifier == null || identifier.equals("")) {
+            throw new IOException("Player not found");
+        }
+ 
+        PlayerProfile profile = PlayerProfileCache.getCached(identifier);
+        if (profile != null) return profile;
+        profile = new PlayerProfile(); // <-- the missing line from the original
+ 
+        String uuid;
+        String displayName;
+        JsonObject mojangInfo = MojangAPI.getPlayerInfo(identifier);
+        uuid = mojangInfo.get("id").getAsString();
+        displayName = mojangInfo.get("name").getAsString();
+ 
+        JsonObject stats = getPlayerStatsRaw(uuid);
+ 
+        if (!stats.has("player") || !stats.get("player").isJsonObject()) {
+            throw new IOException("Player data not found");
+        }
+        JsonObject playerStats = stats.get("player").getAsJsonObject();
+        if (!playerStats.has("stats") || !playerStats.get("stats").getAsJsonObject().has("Bedwars")) {
+            throw new IOException("Player data not found");
+        }
+ 
+        JsonObject bedwars = playerStats.get("stats").getAsJsonObject().get("Bedwars").getAsJsonObject();
+        try { profile.bedwarsFinalKills = bedwars.get("final_kills_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsFinalDeaths = bedwars.get("final_deaths_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsWins = bedwars.get("wins_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsLosses = bedwars.get("losses_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsBedsBroken = bedwars.get("beds_broken_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsBedsLost = bedwars.get("beds_lost_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsKills = bedwars.get("kills_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsDeaths = bedwars.get("deaths_bedwars").getAsInt(); } catch (NullPointerException ignore) {}
+        try { profile.bedwarsLevel = playerStats.get("achievements").getAsJsonObject().get("bedwars_level").getAsInt(); } catch (NullPointerException ignore) {}
+        profile.bedwarsLevelFormatted = getPlayerBedwarsStarsFormatted(stats);
+ 
+        profile.uuid = uuid;
+        profile.displayName = displayName;
+        profile.hypixelDisplayName = formatNameWithRank(stats);
+        profile.hypixelStatus = getPlayerStatus(uuid);
+ 
+        PlayerProfileCache.cache(identifier, profile);
+        return profile;
+    }
+
+    
     public static PlayerProfile getPlayerProfile(String identifier) throws IOException {
-        PlayerProfile profile = new PlayerProfile();
+        if (identifier == null || identifier.equals("")) { throw new IOException("Player not found"); }
+        PlayerProfile profile = PlayerProfileCache.getCached(identifier);
+        if (profile != null) return profile;
+        profile = new PlayerProfile();
 
         String uuid = "";
         String displayName = "";
@@ -221,6 +312,6 @@ public class Hypixel implements StatCheckAPI {
     private static String getPlayerBedwarsStarsFormatted(JsonObject stats) {
         int stars = stats.get("player").getAsJsonObject().get("achievements").getAsJsonObject().get("bedwars_level").getAsInt();
 
-        return "§r§7[" + stars + "✫]";
+        return BedwarsUtil.formatStars(stars);
     }
 }

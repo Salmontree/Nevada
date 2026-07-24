@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ottertree.nevada.NevadaConfig;
+import com.ottertree.nevada.config.NevadaConfig;
 
 public class Coral {
     public static List<Tag> getPlayerTags(String identifier) throws IOException {

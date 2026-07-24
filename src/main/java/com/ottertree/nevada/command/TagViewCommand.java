@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.ottertree.nevada.Async;
 import com.ottertree.nevada.NevadaCommon;
-import com.ottertree.nevada.NevadaConfig;
+import com.ottertree.nevada.config.NevadaConfig;
 import com.ottertree.nevada.blacklist.Coral;
 import com.ottertree.nevada.blacklist.Tag;
 import com.ottertree.nevada.stats.PlayerProfile;

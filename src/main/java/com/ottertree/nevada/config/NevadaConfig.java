@@ -1,4 +1,6 @@
-package com.ottertree.nevada;
+package com.ottertree.nevada.config;
+
+import com.ottertree.nevada.NevadaCommon;
 
 import cc.polyfrost.oneconfig.config.Config;
 import cc.polyfrost.oneconfig.config.annotations.Switch;
@@ -14,6 +16,11 @@ public class NevadaConfig extends Config {
 
     @Switch(name="Use Urchin (Coral)", category="Tags", subcategory="Taglists")
     public static boolean Tags_UseCoral = false;
+
+    @Switch(name="Enable Tab Stats", category="Tab Stats")
+    public static boolean TabStats_Enable = true;
+    @Switch(name="Enable Tab Stats In Lobbies", category="Tab Stats")
+    public static boolean TabStats_EnableInLobbies = false;
     
     public NevadaConfig() {
         super(new Mod(NevadaCommon.NAME, ModType.HYPIXEL), NevadaCommon.MODID + ".json");
