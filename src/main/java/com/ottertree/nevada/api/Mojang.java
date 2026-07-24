@@ -9,6 +9,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.RateLimiter;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class Mojang {
@@ -59,11 +60,35 @@ public class Mojang {
                 throw new Exception(connection.getResponseMessage());
             }
  
-            return JsonParser.parseReader(new InputStreamReader(connection.getInputStream()))
-                    .getAsJsonObject().get("id").getAsString();
+            return JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("id").getAsString();
         } finally {
             if (connection != null) connection.disconnect();
         }
     }
 
+    public static CompletableFuture<Boolean> playerExists(String name) {
+        if (name == null || name.isEmpty()) {
+            CompletableFuture<Boolean> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new Exception("Player not found"));
+            return failed;
+        }
+ 
+        String key = name.toLowerCase();
+ 
+        String cached = cache.getIfPresent(key);
+        if (cached != null) {
+            return CompletableFuture.completedFuture(true);
+        }
+ 
+        return CompletableFuture.supplyAsync(() -> {
+            rateLimiter.acquire();
+            try {
+                String uuid = fetchUUIDBlocking(name);
+                cache.put(key, uuid);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }, executor);
+    }
 }

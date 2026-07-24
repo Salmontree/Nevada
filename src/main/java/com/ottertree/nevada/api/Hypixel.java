@@ -50,14 +50,6 @@ public class Hypixel {
             Player player = playerReply.getPlayer();
             PlayerProfile profile = new PlayerProfile();
 
-            // Bedwars stats
-            JsonObject bedwarsStats = player.getObjectProperty("stats").get("Bedwars").getAsJsonObject();
-            profile.bedwars.finalDeaths = bedwarsStats.get("final_deaths_bedwars").getAsInt();
-            profile.bedwars.finalKills = bedwarsStats.get("final_kills_bedwars").getAsInt();
-            profile.bedwars.wins = bedwarsStats.get("wins_bedwars").getAsInt();
-            profile.bedwars.losses = bedwarsStats.get("losses_bedwars").getAsInt();
-            profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
-
             // Format name with rank
             if (!player.hasRank()) profile.hypixel.displayName = "§7" + player.getName();
             else if (player.hasProperty("prefix")) profile.hypixel.displayName = player.getStringProperty("prefix", "§7[UNKNOWN] ") + " " + player.getName();
@@ -70,6 +62,21 @@ public class Hypixel {
                 case "STAFF": profile.hypixel.displayName = "§c[§6ዞ§c] " + player.getName(); break;
                 case "YOUTUBER": profile.hypixel.displayName = "§c[§fYOUTUBE§c] " + player.getName(); break;
                 default: profile.hypixel.displayName = "§7" + player.getName(); break;
+            }
+
+            if (!player.exists()) {
+                PlayerProfileCache.INSTANCE.cacheProfile(uuid, profile);
+                return profile;
+            }
+
+            // Bedwars stats
+            if (player.getObjectProperty("stats").getAsJsonObject().has("Bedwars")) {
+                JsonObject bedwarsStats = player.getObjectProperty("stats").get("Bedwars").getAsJsonObject();
+                if (bedwarsStats.has("final_deaths_bedwars")) profile.bedwars.finalDeaths = bedwarsStats.get("final_deaths_bedwars").getAsInt();
+                if (bedwarsStats.has("final_kills_bedwars")) profile.bedwars.finalKills = bedwarsStats.get("final_kills_bedwars").getAsInt();
+                if (bedwarsStats.has("wins_bedwars")) profile.bedwars.wins = bedwarsStats.get("wins_bedwars").getAsInt();
+                if (bedwarsStats.has("losses_bedwars")) profile.bedwars.losses = bedwarsStats.get("losses_bedwars").getAsInt();
+                profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
             }
 
             PlayerProfileCache.INSTANCE.cacheProfile(uuid, profile);

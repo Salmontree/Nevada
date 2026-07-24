@@ -1,6 +1,7 @@
 package com.ottertree.nevada;
 
 import com.ottertree.nevada.command.StatCheckCommand;
+import com.ottertree.nevada.command.ViewCommand;
 import com.ottertree.nevada.config.NevadaConfig;
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager;
@@ -19,5 +20,6 @@ public class Nevada {
     public void onInit(FMLInitializationEvent event) {
         config = new NevadaConfig();
         CommandManager.register(new StatCheckCommand());
+        CommandManager.register(new ViewCommand());
     }
 }
