@@ -68,9 +68,11 @@ public class Urchin {
             connection.setRequestProperty("X-API-Key", Nevada.config.APIKeys_Urchin);
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            int code = connection.getResponseCode();
+            if (code == 404)
+                return new ArrayList<>();
+            else if (code != HttpURLConnection.HTTP_OK)
                 throw new Exception(connection.getResponseMessage());
-            }
 
             ArrayList<Tag> tagList = new ArrayList<Tag>();
             JsonArray tags = JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("tags").getAsJsonArray();

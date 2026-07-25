@@ -24,10 +24,13 @@ public class ViewCommand {
                     ChatUtil.send(ChatUtil.INDENT + "§8No tags found!");
                     return;
                 }
-
                 tags.forEach(tag -> {
                     ChatUtil.send(ChatUtil.INDENT + "§8Found Urchin tag: §4" + tag.typeTitle + " §7(" + tag.reason + ")");
                 });
+            }).exceptionally(e -> {
+                Throwable cause = e instanceof java.util.concurrent.CompletionException ? e.getCause() : e;
+                ChatUtil.send(ChatUtil.PREFIX + "§cError fetching tags: " + cause);
+                return null;
             });
         });
     }

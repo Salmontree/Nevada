@@ -1,6 +1,7 @@
 package com.ottertree.nevada;
 
 import com.ottertree.nevada.command.DebugCommand;
+import com.ottertree.nevada.command.DenickCommand;
 import com.ottertree.nevada.command.StatCheckCommand;
 import com.ottertree.nevada.command.ViewCommand;
 import com.ottertree.nevada.config.NevadaConfig;
@@ -28,6 +29,7 @@ public class Nevada {
         MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
 
         CommandManager.register(new DebugCommand());
+        CommandManager.register(new DenickCommand());
         CommandManager.register(new StatCheckCommand());
         CommandManager.register(new ViewCommand());
     }

@@ -27,15 +27,20 @@ public class StatCheckCommand {
             }
 
             Hypixel.INSTANCE.getPlayerProfileFromName(username).thenAccept(profile -> {
-                TaglistUtil.getFullTablistCompacted(username).thenAccept(taglist -> {
+                TaglistUtil.getFullTablistCompacted(username).thenAccept(taglistResult -> {
+                    String taglist = taglistResult;
                     if (!taglist.isEmpty()) taglist += " ";
                     switch (game) {
                         case "bw": ChatUtil.send(ChatUtil.INDENT + taglist + BedwarsUtil.formatLevel(profile.bedwars.level) + " " + profile.hypixel.displayName + "§8 - Finals: " + BedwarsUtil.colorFinals(profile.bedwars.finalKills) + " §8FKDR: " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()) + " §8Wins: " + BedwarsUtil.colorFinals(profile.bedwars.wins) + " §8WLR: " + BedwarsUtil.colorWLR(profile.bedwars.getWLR())); break;
                         case "bb": ChatUtil.send(ChatUtil.INDENT + taglist + BuildBattleUtil.formatScore(profile.buildbattle.score) + " " + profile.hypixel.displayName + " §8Wins: §7" + profile.buildbattle.wins + " §8Solo Wins: §7" + profile.buildbattle.soloWins + " §8Doubles Wins: §7" + profile.buildbattle.doublesWins + " §8GTB Wins: §7" + profile.buildbattle.gtbWins); break;
                     }
+                }).exceptionally(e -> {
+                    ChatUtil.send(ChatUtil.PREFIX + "§cError fetching tags: " + e.getMessage());
+                    return null;
                 });
             }).exceptionally(e -> {
-                ChatUtil.send(ChatUtil.PREFIX + "§cError: " + e.getMessage());
+                Throwable cause = e instanceof java.util.concurrent.CompletionException ? e.getCause() : e;
+                ChatUtil.send(ChatUtil.PREFIX + "§cError: " + cause);
                 return null;
             });
         }).exceptionally(e -> {
