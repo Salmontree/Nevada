@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -25,7 +26,8 @@ public class Urchin {
     public static final Urchin INSTANCE = new Urchin();
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4, new ThreadFactoryBuilder().setNameFormat("urchin-api-%d").setDaemon(true).build());
-    private static final RateLimiter rateLimiter = RateLimiter.create(30.0);
+    private static final RateLimiter rateLimiter = RateLimiter.create(7.0);
+    private static final ConcurrentHashMap<String, CompletableFuture<List<Tag>>> pendingRequests = new ConcurrentHashMap<>();
 
     public Urchin() {}
 
@@ -41,18 +43,21 @@ public class Urchin {
             return CompletableFuture.completedFuture(cachedTaglist);
         }
 
-        return CompletableFuture.supplyAsync(() -> {
-            rateLimiter.acquire();
-            try {
-                return fetchTaglistBlocking(name);
-            } catch (Exception e) {
-                throw new CompletionException(e);
-            }
-        }, executor)
-        .thenApply(taglist -> {
-            PlayerTaglistCache.INSTANCE.cacheTaglist(name, taglist);
-            return taglist;
-        });
+        return pendingRequests.computeIfAbsent(name, key ->
+            CompletableFuture.supplyAsync(() -> {
+                rateLimiter.acquire();
+                try {
+                    return fetchTaglistBlocking(key);
+                } catch (Exception e) {
+                    throw new CompletionException(e);
+                }
+            }, executor)
+            .thenApply(taglist -> {
+                PlayerTaglistCache.INSTANCE.cacheTaglist(key, taglist);
+                return taglist;
+            })
+            .whenComplete((taglist, err) -> pendingRequests.remove(key))
+        );
     }
 
     private static List<Tag> fetchTaglistBlocking(String name) throws Exception {

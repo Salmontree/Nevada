@@ -19,7 +19,7 @@ public class BedwarsUtil {
         try {
             Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
             for (Score score : scoreboard.getSortedScores(scoreboard.getObjectiveInDisplaySlot(1))) {
-                if (inBedwars() && ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName()).contains("Slumber"))
+                if (inBedwars() && ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName()).contains("Level:"))
                     return true;
             }
         } catch (Exception e) {
@@ -30,6 +30,23 @@ public class BedwarsUtil {
 
     public static boolean inGame() {
         return inBedwars() && !inLobby();
+    }
+
+    public static boolean inPregame() {
+        try {
+            Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
+            for (Score score : scoreboard.getSortedScores(scoreboard.getObjectiveInDisplaySlot(1))) {
+                if (inBedwars() && ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName()).contains("Map:"))
+                    return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    public static boolean inActiveGame() {
+        return inBedwars() && inGame() && !inPregame();
     }
     
     public static String formatLevel(int level) {

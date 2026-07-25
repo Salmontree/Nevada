@@ -1,12 +1,8 @@
 package com.ottertree.nevada.command;
 
-import java.util.ArrayList;
-
-import com.ottertree.nevada.Nevada;
-import com.ottertree.nevada.api.Urchin;
-import com.ottertree.nevada.data.Tag;
 import com.ottertree.nevada.util.ChatUtil;
 import com.ottertree.nevada.util.PlayerUtil;
+import com.ottertree.nevada.util.TaglistUtil;
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
@@ -22,19 +18,14 @@ public class ViewCommand {
                 ChatUtil.send(ChatUtil.INDENT + "§8Player not found");
                 return;
             }
-        
-            ArrayList<Tag> list = new ArrayList<Tag>();
-
-            if (Nevada.config.Blacklists_EnableUrchin)
-            Urchin.INSTANCE.getPlayerTaglist(username).thenAccept(tags -> {
-                list.addAll(tags);
             
-                if (list.isEmpty()) {
-                    ChatUtil.send(ChatUtil.INDENT + "§8Found no tags!");
+            TaglistUtil.getFullTablist(username).thenAccept(tags -> {
+                if (tags.isEmpty()) {
+                    ChatUtil.send(ChatUtil.INDENT + "§8No tags found!");
                     return;
                 }
 
-                list.forEach(tag -> {
+                tags.forEach(tag -> {
                     ChatUtil.send(ChatUtil.INDENT + "§8Found Urchin tag: §4" + tag.typeTitle + " §7(" + tag.reason + ")");
                 });
             });

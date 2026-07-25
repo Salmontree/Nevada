@@ -7,6 +7,7 @@ import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.api.Hypixel;
 import com.ottertree.nevada.data.PlayerProfile;
 import com.ottertree.nevada.util.BedwarsUtil;
+import com.ottertree.nevada.util.TaglistUtil;
 
 import cc.polyfrost.oneconfig.utils.hypixel.HypixelUtils;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
@@ -35,7 +36,16 @@ public abstract class GuiPlayerTabOverlayMixin {
             if (future.isDone() && !future.isCompletedExceptionally()) {
                 PlayerProfile profile = future.getNow(null);
                 if (profile != null) {
-                    cir.setReturnValue(BedwarsUtil.formatLevel(profile.bedwars.level) + " " + cir.getReturnValue() + " §7| " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()));
+                    if (profile.hypixel.isNick) {
+                        cir.setReturnValue("§5[NICK] " + cir.getReturnValue());
+                        return;
+                    }
+
+                    TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
+                        if (!taglist.isEmpty()) taglist += " ";
+
+                        cir.setReturnValue(BedwarsUtil.formatLevel(profile.bedwars.level) + " " + taglist + cir.getReturnValue() + " §7| " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()));
+                    });
                 }
             }
         }

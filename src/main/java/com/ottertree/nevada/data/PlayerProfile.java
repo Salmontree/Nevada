@@ -24,6 +24,7 @@ public class PlayerProfile {
     
     public static class Hypixel {
         public String displayName;
+        public boolean isNick;
     }
     public Hypixel hypixel = new Hypixel();
 }

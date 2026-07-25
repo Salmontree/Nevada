@@ -5,6 +5,7 @@ import com.ottertree.nevada.util.BedwarsUtil;
 import com.ottertree.nevada.util.BuildBattleUtil;
 import com.ottertree.nevada.util.ChatUtil;
 import com.ottertree.nevada.util.PlayerUtil;
+import com.ottertree.nevada.util.TaglistUtil;
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
@@ -26,10 +27,13 @@ public class StatCheckCommand {
             }
 
             Hypixel.INSTANCE.getPlayerProfileFromName(username).thenAccept(profile -> {
-                switch (game) {
-                    case "bw": ChatUtil.send(ChatUtil.INDENT + BedwarsUtil.formatLevel(profile.bedwars.level) + " " + profile.hypixel.displayName + "§7 - Finals: " + BedwarsUtil.colorFinals(profile.bedwars.finalKills) + " §7FKDR: " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()) + " §7Wins: " + BedwarsUtil.colorFinals(profile.bedwars.wins) + " §7WLR: " + BedwarsUtil.colorWLR(profile.bedwars.getWLR())); break;
-                    case "bb": ChatUtil.send(ChatUtil.INDENT + BuildBattleUtil.formatScore(profile.buildbattle.score) + " " + profile.hypixel.displayName + " §7Wins: §f" + profile.buildbattle.wins + " §7Solo Wins: §f" + profile.buildbattle.soloWins + " §7Doubles Wins: §f" + profile.buildbattle.doublesWins + " §7GTB Wins: §f" + profile.buildbattle.gtbWins); break;
-                }
+                TaglistUtil.getFullTablistCompacted(username).thenAccept(taglist -> {
+                    if (!taglist.isEmpty()) taglist += " ";
+                    switch (game) {
+                        case "bw": ChatUtil.send(ChatUtil.INDENT + taglist + BedwarsUtil.formatLevel(profile.bedwars.level) + " " + profile.hypixel.displayName + "§8 - Finals: " + BedwarsUtil.colorFinals(profile.bedwars.finalKills) + " §8FKDR: " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()) + " §8Wins: " + BedwarsUtil.colorFinals(profile.bedwars.wins) + " §8WLR: " + BedwarsUtil.colorWLR(profile.bedwars.getWLR())); break;
+                        case "bb": ChatUtil.send(ChatUtil.INDENT + taglist + BuildBattleUtil.formatScore(profile.buildbattle.score) + " " + profile.hypixel.displayName + " §8Wins: §7" + profile.buildbattle.wins + " §8Solo Wins: §7" + profile.buildbattle.soloWins + " §8Doubles Wins: §7" + profile.buildbattle.doublesWins + " §8GTB Wins: §7" + profile.buildbattle.gtbWins); break;
+                    }
+                });
             }).exceptionally(e -> {
                 ChatUtil.send(ChatUtil.PREFIX + "§cError: " + e.getMessage());
                 return null;

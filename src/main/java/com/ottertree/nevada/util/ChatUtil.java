@@ -14,4 +14,8 @@ public class ChatUtil {
     public static void send(String text) {
         mc.thePlayer.addChatMessage(new ChatComponentText(text));
     }
+
+    public static void say(String text) {
+        mc.thePlayer.sendChatMessage(text);
+    }
 }

@@ -60,7 +60,7 @@ public class Hypixel {
         PlayerProfile profile = new PlayerProfile();
 
         if (player == null || !player.exists()) {
-            profile.hypixel.displayName = "§7Unknown";
+            profile.hypixel.isNick = true;
             PlayerProfileCache.INSTANCE.cacheProfile(uuid, profile);
             return profile;
         }
