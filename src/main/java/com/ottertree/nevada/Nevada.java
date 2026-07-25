@@ -3,8 +3,10 @@ package com.ottertree.nevada;
 import com.ottertree.nevada.command.StatCheckCommand;
 import com.ottertree.nevada.command.ViewCommand;
 import com.ottertree.nevada.config.NevadaConfig;
+import com.ottertree.nevada.event.WorldLoadEvent;
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
@@ -19,6 +21,9 @@ public class Nevada {
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
         config = new NevadaConfig();
+
+        MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
+
         CommandManager.register(new StatCheckCommand());
         CommandManager.register(new ViewCommand());
     }

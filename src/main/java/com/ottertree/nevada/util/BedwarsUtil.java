@@ -1,10 +1,35 @@
 package com.ottertree.nevada.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.scoreboard.Score;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.scoreboard.Scoreboard;
 
 public class BedwarsUtil {
     public static boolean inBedwars() {
-        return Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1).getDisplayName().replaceAll("§.", "").equals("BED WARS");
+        try {
+            return Minecraft.getMinecraft().theWorld.getScoreboard().getObjectiveInDisplaySlot(1).getDisplayName().replaceAll("§.", "").equals("BED WARS");
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean inLobby() {
+        try {
+            Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
+            for (Score score : scoreboard.getSortedScores(scoreboard.getObjectiveInDisplaySlot(1))) {
+                if (inBedwars() && ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName()).contains("Slumber"))
+                    return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    public static boolean inGame() {
+        return inBedwars() && !inLobby();
     }
     
     public static String formatLevel(int level) {

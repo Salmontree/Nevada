@@ -9,7 +9,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.RateLimiter;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class Mojang {
@@ -27,6 +26,12 @@ public class Mojang {
         }
  
         String key = name.toLowerCase();
+
+        if (key == null) {
+            CompletableFuture<String> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new Exception("Undefined error, please report to the developer!"));
+            return failed;
+        }
  
         String cached = cache.getIfPresent(key);
         if (cached != null) {
@@ -38,6 +43,7 @@ public class Mojang {
                 rateLimiter.acquire();
                 try {
                     String uuid = fetchUUIDBlocking(name);
+                    if (uuid == null) return "";
                     cache.put(key, uuid);
                     return uuid;
                 } catch (Exception e) {
@@ -74,6 +80,12 @@ public class Mojang {
         }
  
         String key = name.toLowerCase();
+
+        if (key == null) {
+            CompletableFuture<Boolean> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new Exception("Undefined error, please report to the developer!"));
+            return failed;
+        }
  
         String cached = cache.getIfPresent(key);
         if (cached != null) {
@@ -84,6 +96,7 @@ public class Mojang {
             rateLimiter.acquire();
             try {
                 String uuid = fetchUUIDBlocking(name);
+                if (uuid == null) return false;
                 cache.put(key, uuid);
                 return true;
             } catch (Exception e) {

@@ -22,16 +22,14 @@ public abstract class GuiPlayerTabOverlayMixin {
     @Inject(method = "getPlayerName", at = @At("RETURN"), cancellable = true)
     private void onGetPlayerName(NetworkPlayerInfo networkPlayerInfoIn, CallbackInfoReturnable<String> cir) {
         GameProfile nwProfile = networkPlayerInfoIn.getGameProfile();
-        if (nwProfile == null || nwProfile.getName() == null || nwProfile.getId() == null)
-            return;
 
-        if (!Nevada.config.TabStats_Enable)
-            return;
-
-        if (!HypixelUtils.INSTANCE.isHypixel())
-            return;
+        if (nwProfile == null || nwProfile.getName() == null || nwProfile.getId() == null) return;
+        if (!HypixelUtils.INSTANCE.isHypixel()) return;
+        if (!Nevada.config.TabStats_Enable) return;
 
         if (BedwarsUtil.inBedwars()) {
+            if (!Nevada.config.TabStats_EnableInLobby && BedwarsUtil.inLobby()) return;
+
             CompletableFuture<PlayerProfile> future = Hypixel.INSTANCE.getPlayerProfileFromUUID(nwProfile.getId().toString());
 
             if (future.isDone() && !future.isCompletedExceptionally()) {

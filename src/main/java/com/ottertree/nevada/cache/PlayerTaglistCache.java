@@ -13,7 +13,7 @@ public class PlayerTaglistCache {
     private Cache<String, List<Tag>> cache;
 
     public PlayerTaglistCache() {
-        cache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).maximumSize(1000).build();
+        cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).maximumSize(1000).build();
     }
 
     public List<Tag> getTaglist(String uuid) {
