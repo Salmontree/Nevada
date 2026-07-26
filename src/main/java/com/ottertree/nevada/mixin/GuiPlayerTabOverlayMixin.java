@@ -36,49 +36,41 @@ public abstract class GuiPlayerTabOverlayMixin {
 
             if (future.isDone() && !future.isCompletedExceptionally()) {
                 PlayerProfile profile = future.getNow(null);
-                if (profile != null) {
-                    if (profile.hypixel.isNick) {
-                        String skinDenick = SkinUtil.skinDenick(nwProfile.getName());
-                        if (skinDenick != null) {
-                            // Player's been successfully denicked
-                            CompletableFuture<PlayerProfile> nickFuture = Hypixel.INSTANCE.getPlayerProfileFromUUID(nwProfile.getId().toString());
-                            if (nickFuture.isDone() && !nickFuture.isCompletedExceptionally()) {
-                                PlayerProfile denickedProfile = nickFuture.getNow(null);
-                                if (profile != null) {
-                                    cir.setReturnValue("§5[NICK] " + cir.getReturnValue() + "§5(" + denickedProfile.hypixel.displayName + "§5)");
-                                    return;
-                                }
-                                else {
-                                    cir.setReturnValue("§5[NICK] " + cir.getReturnValue());
-                                    return;
-                                }
-                            }
+                if (profile.hypixel.isNick) {
+                    String skinDenick = SkinUtil.skinDenick(nwProfile.getName());
+                    if (skinDenick != null) {
+                        // Player's been successfully denicked
+                        CompletableFuture<PlayerProfile> nickFuture = Hypixel.INSTANCE.getPlayerProfileFromName(skinDenick);
+                        if (nickFuture.isDone() && !nickFuture.isCompletedExceptionally()) {
+                            PlayerProfile denickedProfile = nickFuture.getNow(null);
+                            cir.setReturnValue("§5[NICK] " + cir.getReturnValue() + " §8(" + denickedProfile.hypixel.displayName + "§8)");
+                            return;
                         }
-
-                        cir.setReturnValue("§5[NICK] " + cir.getReturnValue());
-                        return;
                     }
 
-                    String tablistStatTemp = "";
-                    switch (Nevada.config.TabStats_TablistStat) {
-                        case 0: tablistStatTemp = BedwarsUtil.colorFinals(profile.bedwars.finalKills); break;
-                        case 1: tablistStatTemp = BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()); break;
-                        case 2: tablistStatTemp = BedwarsUtil.colorWins(profile.bedwars.wins); break;
-                        case 3: tablistStatTemp = BedwarsUtil.colorWLR(profile.bedwars.getWLR()); break;
-                        case 4: tablistStatTemp = BedwarsUtil.colorBedsBroken(profile.bedwars.bedsBroken); break;
-                        case 5: tablistStatTemp = BedwarsUtil.colorBBLR(profile.bedwars.getBBLR()); break;
-                    }
-                    final String tablistStat = tablistStatTemp;
+                    cir.setReturnValue("§5[NICK] " + cir.getReturnValue());
+                    return;
+                }
 
-                    if (Nevada.config.TabStats_ShowTags) {
-                        TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
-                            if (!taglist.isEmpty()) taglist += " ";
+                String tablistStatTemp = "";
+                switch (Nevada.config.TabStats_TablistStat) {
+                    case 0: tablistStatTemp = BedwarsUtil.colorFinals(profile.bedwars.finalKills); break;
+                    case 1: tablistStatTemp = BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()); break;
+                    case 2: tablistStatTemp = BedwarsUtil.colorWins(profile.bedwars.wins); break;
+                    case 3: tablistStatTemp = BedwarsUtil.colorWLR(profile.bedwars.getWLR()); break;
+                    case 4: tablistStatTemp = BedwarsUtil.colorBedsBroken(profile.bedwars.bedsBroken); break;
+                    case 5: tablistStatTemp = BedwarsUtil.colorBBLR(profile.bedwars.getBBLR()); break;
+                }
+                final String tablistStat = tablistStatTemp;
 
-                            cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
-                        });
-                    } else {
-                        cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
-                    }
+                if (Nevada.config.TabStats_ShowTags) {
+                    TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
+                        if (!taglist.isEmpty()) taglist += " ";
+
+                        cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                    });
+                } else {
+                    cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
                 }
             }
         }

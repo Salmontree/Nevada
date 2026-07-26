@@ -8,7 +8,7 @@ import com.ottertree.nevada.util.SkinUtil;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="denick", description="/denick <skin|finals|beds> <value>", aliases={"dn"})
+@Command(value="denick", description="/denick <skin|finals|beds> <value>", aliases={"dn"}, customHelpMessage={ChatUtil.PREFIX + "§8/§7denick§8: Denick players via. their skin, finals, or beds.", ChatUtil.INDENT + "§8Usage: /§7denick§8 <skin|finals|beds> <value>", ChatUtil.INDENT + "§8Aliases: /§7dn"})
 public class DenickCommand {
     @Main
     private void handle(String key, String value) {
@@ -32,7 +32,7 @@ public class DenickCommand {
 
         if (realName != null)
             Hypixel.INSTANCE.getPlayerProfileFromName(realName).thenAccept(profile -> {
-                ChatUtil.send(ChatUtil.INDENT + "§aPlayer is nicked as " + profile.hypixel.displayName + "§a!");
+                ChatUtil.send(ChatUtil.INDENT + "§aPlayer denicked as " + profile.hypixel.displayName + "§a!");
             });
         else
             ChatUtil.send(ChatUtil.INDENT + "§cCould not denick " + name);

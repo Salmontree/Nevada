@@ -10,7 +10,7 @@ import com.ottertree.nevada.util.TaglistUtil;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="statcheck", description="/statcheck <username> <mode> [recency]", aliases={"sc"})
+@Command(value="statcheck", description="/statcheck <username> <mode> [daily|weekly|monthly]", aliases={"sc", "stats"}, customHelpMessage={ChatUtil.PREFIX + "§8/§7statcheck§8: Check Hypixel stats for any player.", ChatUtil.INDENT + "§8Usage: /§7statcheck§8 <username> <mode> [daily|weekly|monthly]", ChatUtil.INDENT + "§8Aliases: /§7stats§8, /§7sc"})
 public class StatCheckCommand {
     @Main
     private void handle(String username, String game) {

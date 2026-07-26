@@ -7,7 +7,7 @@ import com.ottertree.nevada.util.TaglistUtil;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="view", description="/view <username>", aliases={"v"})
+@Command(value="view", description="/view <username>", aliases={"v"}, customHelpMessage={ChatUtil.PREFIX + "§8/§7view§8: Check blacklist tags for any player.", ChatUtil.INDENT + "§8Usage: /§7view§8 <username>", ChatUtil.INDENT + "§8Aliases: /§7v"})
 public class ViewCommand {
     @Main
     private void handle(String username) {
