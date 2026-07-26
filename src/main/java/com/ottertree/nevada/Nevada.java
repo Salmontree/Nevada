@@ -5,6 +5,7 @@ import com.ottertree.nevada.command.ClearCacheCommand;
 import com.ottertree.nevada.command.DebugCommand;
 import com.ottertree.nevada.command.DenickCommand;
 import com.ottertree.nevada.command.GexpCommand;
+import com.ottertree.nevada.command.PlayCommand;
 import com.ottertree.nevada.command.StatCheckCommand;
 import com.ottertree.nevada.command.ViewCommand;
 import com.ottertree.nevada.config.NevadaConfig;
@@ -36,6 +37,7 @@ public class Nevada {
         CommandManager.register(new DebugCommand());
         CommandManager.register(new DenickCommand());
         CommandManager.register(new GexpCommand());
+        CommandManager.register(new PlayCommand());
         CommandManager.register(new StatCheckCommand());
         CommandManager.register(new ViewCommand());
     }
