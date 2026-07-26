@@ -86,6 +86,8 @@ public class Hypixel {
             if (stats.has("final_kills_bedwars")) profile.bedwars.finalKills = stats.get("final_kills_bedwars").getAsInt();
             if (stats.has("wins_bedwars")) profile.bedwars.wins = stats.get("wins_bedwars").getAsInt();
             if (stats.has("losses_bedwars")) profile.bedwars.losses = stats.get("losses_bedwars").getAsInt();
+            if (stats.has("beds_broken_bedwars")) profile.bedwars.bedsBroken = stats.get("beds_broken_bedwars").getAsInt();
+            if (stats.has("beds_lost_bedwars")) profile.bedwars.bedsLost = stats.get("beds_lost_bedwars").getAsInt();
             profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
         }
 

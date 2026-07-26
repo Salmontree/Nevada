@@ -107,4 +107,31 @@ public class BedwarsUtil {
         if (wins >= 30000) code = "§5" + wins;
         return code;
     }
+    public static String colorBBLR(float rawBblr) {
+        String bblr = String.format("%.2f", rawBblr);
+        String code = "§7" + bblr;
+        if (rawBblr >= 0.2) code = "§f" + bblr;
+        if (rawBblr >= 0.6) code = "§a" + bblr;
+        if (rawBblr >= 1) code = "§2" + bblr;
+        if (rawBblr >= 1.4) code = "§e" + bblr;
+        if (rawBblr >= 2) code = "§6" + bblr;
+        if (rawBblr >= 4) code = "§c" + bblr;
+        if (rawBblr >= 6) code = "§4" + bblr;
+        if (rawBblr >= 10) code = "§d" + bblr;
+        if (rawBblr >= 20) code = "§5" + bblr;
+        return code;
+    }
+    public static String colorBedsBroken(int beds) {
+        String code = "§7" + beds;
+        if (beds >= 250) code = "§f" + beds;
+        if (beds >= 500) code = "§a" + beds;
+        if (beds >= 1250) code = "§2" + beds;
+        if (beds >= 2500) code = "§e" + beds;
+        if (beds >= 3750) code = "§6" + beds;
+        if (beds >= 7500) code = "§c" + beds;
+        if (beds >= 12500) code = "§4" + beds;
+        if (beds >= 25000) code = "§d" + beds;
+        if (beds >= 50000) code = "§5" + beds;
+        return code;
+    }
 }
