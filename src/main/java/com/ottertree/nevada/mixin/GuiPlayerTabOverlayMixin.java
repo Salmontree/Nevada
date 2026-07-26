@@ -5,8 +5,10 @@ import java.util.concurrent.CompletableFuture;
 import com.mojang.authlib.GameProfile;
 import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.api.Hypixel;
+import com.ottertree.nevada.cache.PlayerNickCache;
 import com.ottertree.nevada.data.PlayerProfile;
 import com.ottertree.nevada.util.BedwarsUtil;
+import com.ottertree.nevada.util.ChatUtil;
 import com.ottertree.nevada.util.SkinUtil;
 import com.ottertree.nevada.util.TaglistUtil;
 
@@ -37,13 +39,40 @@ public abstract class GuiPlayerTabOverlayMixin {
             if (future.isDone() && !future.isCompletedExceptionally()) {
                 PlayerProfile profile = future.getNow(null);
                 if (profile.hypixel.isNick) {
+                    // Skin hasn't been denicked before
+                    final boolean firstDenick = PlayerNickCache.INSTANCE.getNick(nwProfile.getName()) == null;
+
                     String skinDenick = SkinUtil.skinDenick(nwProfile.getName());
                     if (skinDenick != null) {
                         // Player's been successfully denicked
                         CompletableFuture<PlayerProfile> nickFuture = Hypixel.INSTANCE.getPlayerProfileFromName(skinDenick);
                         if (nickFuture.isDone() && !nickFuture.isCompletedExceptionally()) {
                             PlayerProfile denickedProfile = nickFuture.getNow(null);
-                            cir.setReturnValue("§5[NICK] " + cir.getReturnValue() + " §8(" + denickedProfile.hypixel.displayName + "§8)");
+
+                            String tablistStatTemp = "";
+                            switch (Nevada.config.TabStats_TablistStat) {
+                                case 0: tablistStatTemp = BedwarsUtil.colorFinals(denickedProfile.bedwars.finalKills); break;
+                                case 1: tablistStatTemp = BedwarsUtil.colorFKDR(denickedProfile.bedwars.getFKDR()); break;
+                                case 2: tablistStatTemp = BedwarsUtil.colorWins(denickedProfile.bedwars.wins); break;
+                                case 3: tablistStatTemp = BedwarsUtil.colorWLR(denickedProfile.bedwars.getWLR()); break;
+                                case 4: tablistStatTemp = BedwarsUtil.colorBedsBroken(denickedProfile.bedwars.bedsBroken); break;
+                                case 5: tablistStatTemp = BedwarsUtil.colorBBLR(denickedProfile.bedwars.getBBLR()); break;
+                            }
+                            final String tablistStat = tablistStatTemp;
+
+                            if (Nevada.config.TabStats_ShowTags) {
+                                TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
+                                    if (!taglist.isEmpty()) taglist += " ";
+
+                                    cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(denickedProfile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                                });
+                            } else {
+                                cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                            }
+
+                            if (firstDenick)
+                                ChatUtil.send(ChatUtil.PREFIX + cir.getReturnValue() + " §awas denicked as " + denickedProfile.hypixel.displayName);
+
                             return;
                         }
                     }
