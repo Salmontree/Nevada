@@ -28,7 +28,7 @@ public class Nevada {
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
         config = new NevadaConfig();
-        ACManager.INSTANCE.initialize();
+        // ACManager.INSTANCE.initialize();
 
         MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
         MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
