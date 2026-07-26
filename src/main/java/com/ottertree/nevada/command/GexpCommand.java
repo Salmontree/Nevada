@@ -8,8 +8,13 @@ import com.ottertree.nevada.util.PlayerUtil;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="gexp", description="/gexp <username> [daily|weekly|monthly]", customHelpMessage={ChatUtil.PREFIX + "§8/§7gexp§8: Get player's earned guild exp.", ChatUtil.INDENT + "§8Usage: /§7gexp §8<username> [daily|weekly|monthly]"})
+@Command(value="gexp", description="/gexp [username] [daily|weekly|monthly]", customHelpMessage={ChatUtil.PREFIX + "§8/§7gexp§8: Get player's earned guild exp.", ChatUtil.INDENT + "§8Usage: /§7gexp §8[username] [daily|weekly|monthly]"})
 public class GexpCommand {
+    @Main
+    private void handle() {
+        handle(PlayerUtil.getPlayerName(), "weekly");
+    }
+    
     @Main
     private void handle(String user) {
         handle(user, "weekly");
