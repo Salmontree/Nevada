@@ -41,11 +41,26 @@ public abstract class GuiPlayerTabOverlayMixin {
                         return;
                     }
 
-                    TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
-                        if (!taglist.isEmpty()) taglist += " ";
+                    String tablistStatTemp = "";
+                    switch (Nevada.config.TabStats_TablistStat) {
+                        case 0: tablistStatTemp = BedwarsUtil.colorFinals(profile.bedwars.finalKills); break;
+                        case 1: tablistStatTemp = BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()); break;
+                        case 2: tablistStatTemp = BedwarsUtil.colorWins(profile.bedwars.wins); break;
+                        case 3: tablistStatTemp = BedwarsUtil.colorWLR(profile.bedwars.getWLR()); break;
+                        case 4: tablistStatTemp = BedwarsUtil.colorBedsBroken(profile.bedwars.bedsBroken); break;
+                        case 5: tablistStatTemp = BedwarsUtil.colorBBLR(profile.bedwars.getBBLR()); break;
+                    }
+                    final String tablistStat = tablistStatTemp;
 
-                        cir.setReturnValue(BedwarsUtil.formatLevel(profile.bedwars.level) + " " + taglist + cir.getReturnValue() + " §7| " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()));
-                    });
+                    if (Nevada.config.TabStats_ShowTags) {
+                        TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
+                            if (!taglist.isEmpty()) taglist += " ";
+
+                            cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                        });
+                    } else {
+                        cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                    }
                 }
             }
         }
