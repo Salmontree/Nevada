@@ -53,7 +53,14 @@ public class ChatReceivedEvent {
                     return;
                 }
                 
-                ChatUtil.send(ChatUtil.PREFIX + BedwarsUtil.formatLevel(profile.bedwars.level) + " " + profile.hypixel.displayName + "§7 - §8Finals: " + BedwarsUtil.colorFinals(profile.bedwars.finalKills) + " §8FKDR: " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()) + " §8Wins: " + BedwarsUtil.colorFinals(profile.bedwars.wins) + " §8WLR: " + BedwarsUtil.colorWLR(profile.bedwars.getWLR()) + " " + TaglistUtil.getFullTablistCompacted(matcher.group(3)));
+                TaglistUtil.getFullTablistCompacted(matcher.group(3)).thenAccept(taglistResult -> {
+                    String taglist = taglistResult;
+                    if (!taglist.isEmpty()) taglist += " ";
+                    ChatUtil.send(ChatUtil.INDENT + BedwarsUtil.formatLevel(profile.bedwars.level) + " " + taglist + profile.hypixel.displayName + "§8 - Finals: " + BedwarsUtil.colorFinals(profile.bedwars.finalKills) + " §8FKDR: " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()) + " §8Wins: " + BedwarsUtil.colorFinals(profile.bedwars.wins) + " §8WLR: " + BedwarsUtil.colorWLR(profile.bedwars.getWLR()));
+                }).exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
             });
         });
     }
