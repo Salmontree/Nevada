@@ -21,13 +21,15 @@ import com.google.gson.JsonParser;
 import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.cache.PlayerTaglistCache;
 import com.ottertree.nevada.data.Tag;
+import com.ottertree.nevada.util.PlayerUtil;
 
 public class Urchin {
     public static final Urchin INSTANCE = new Urchin();
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4, new ThreadFactoryBuilder().setNameFormat("urchin-api-%d").setDaemon(true).build());
     private static final RateLimiter rateLimiter = RateLimiter.create(7.0);
-    private static final ConcurrentHashMap<String, CompletableFuture<List<Tag>>> pendingRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, CompletableFuture<List<Tag>>> pendingTagRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, CompletableFuture<Integer>> pendingGuildRequests = new ConcurrentHashMap<>();
 
     public Urchin() {}
 
@@ -43,7 +45,7 @@ public class Urchin {
             return CompletableFuture.completedFuture(cachedTaglist);
         }
 
-        return pendingRequests.computeIfAbsent(name, key ->
+        return pendingTagRequests.computeIfAbsent(name, key ->
             CompletableFuture.supplyAsync(() -> {
                 rateLimiter.acquire();
                 try {
@@ -56,7 +58,7 @@ public class Urchin {
                 PlayerTaglistCache.INSTANCE.cacheTaglist(key, taglist);
                 return taglist;
             })
-            .whenComplete((taglist, err) -> pendingRequests.remove(key))
+            .whenComplete((taglist, err) -> pendingTagRequests.remove(key))
         );
     }
 
@@ -86,6 +88,49 @@ public class Urchin {
                 tagList.add(result);
             });
             return tagList;
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
+    }
+
+    public CompletableFuture<Integer> getPlayerGexp(String name, String timePeriod) {
+        if (name == null || name.isEmpty()) {
+            CompletableFuture<Integer> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new Exception("Player not found"));
+            return failed;
+        }
+
+        return pendingGuildRequests.computeIfAbsent(name, key ->
+            PlayerUtil.getPlayerUUID(key).thenCompose(uuid ->
+                Hypixel.INSTANCE.getGuildFromPlayerUUID(uuid).thenCompose(guild ->
+                    CompletableFuture.supplyAsync(() -> {
+                        rateLimiter.acquire();
+                        try {
+                            return fetchGexpBlocking(guild.getGuild().getName(), uuid, timePeriod);
+                        } catch (Exception e) {
+                            throw new CompletionException(e);
+                        }
+                    }, executor)
+                )
+            ).whenComplete((gexp, err) -> pendingGuildRequests.remove(key))
+        );
+    }
+
+    private int fetchGexpBlocking(String guildName, String uuid, String timePeriod) throws Exception {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) new URL("https://api.urchin.gg/v3/guild/sessions/" + timePeriod + "?guild=" + guildName).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("X-API-Key", Nevada.config.APIKeys_Urchin);
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            int code = connection.getResponseCode();
+            if (code == 404)
+                return 0;
+            else if (code != HttpURLConnection.HTTP_OK)
+                throw new Exception(connection.getResponseMessage());
+
+            return JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().get("gexp").getAsJsonObject().get("total").getAsInt();
         } finally {
             if (connection != null) connection.disconnect();
         }

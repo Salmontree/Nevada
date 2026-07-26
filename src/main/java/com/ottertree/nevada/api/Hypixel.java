@@ -17,6 +17,7 @@ import com.ottertree.nevada.util.PlayerUtil;
 import net.hypixel.api.HypixelAPI;
 import net.hypixel.api.apache.ApacheHttpClient;
 import net.hypixel.api.http.HypixelHttpClient;
+import net.hypixel.api.reply.GuildReply;
 import net.hypixel.api.reply.PlayerReply.Player;
 
 public class Hypixel {
@@ -27,7 +28,8 @@ public class Hypixel {
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(12, new ThreadFactoryBuilder().setNameFormat("hypixel-api-%d").setDaemon(true).build());
     private static final RateLimiter rateLimiter = RateLimiter.create(7.0);
-    private static final ConcurrentHashMap<String, CompletableFuture<PlayerProfile>> pendingRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, CompletableFuture<PlayerProfile>> pendingPlayerRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, CompletableFuture<GuildReply>> pendingGuildRequests = new ConcurrentHashMap<>();
 
     public Hypixel() {
         client = new ApacheHttpClient(UUID.fromString(Nevada.config.APIKeys_Hypixel));
@@ -48,11 +50,29 @@ public class Hypixel {
         PlayerProfile cachedProfile = PlayerProfileCache.INSTANCE.getProfile(uuid);
         if (cachedProfile != null) { return CompletableFuture.completedFuture(cachedProfile); }
 
-        return pendingRequests.computeIfAbsent(uuid, id ->
+        return pendingPlayerRequests.computeIfAbsent(uuid, id ->
             CompletableFuture.supplyAsync(() -> { rateLimiter.acquire(); return null; }, executor)
                 .thenCompose(ignored -> api.getPlayerByUuid(id))
                 .thenApply(playerReply -> buildProfile(id, playerReply.getPlayer()))
-                .whenComplete((profile, err) -> pendingRequests.remove(id))
+                .whenComplete((profile, err) -> pendingPlayerRequests.remove(id))
+        );
+    }
+
+    public CompletableFuture<GuildReply> getGuildFromPlayerName(String name) {
+        return PlayerUtil.getPlayerUUID(name).thenCompose(this::getGuildFromPlayerUUID);
+    }
+
+    public CompletableFuture<GuildReply> getGuildFromPlayerUUID(String uuid) {
+        if (uuid == null || uuid.isEmpty()) {
+            CompletableFuture<GuildReply> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new Exception("Player not found"));
+            return failed;
+        }
+
+        return pendingGuildRequests.computeIfAbsent(uuid, id ->
+            CompletableFuture.supplyAsync(() -> { rateLimiter.acquire(); return null; }, executor)
+                .thenCompose(ignored -> api.getGuildByPlayer(uuid))
+                .whenComplete((profile, err) -> pendingGuildRequests.remove(id))
         );
     }
 
