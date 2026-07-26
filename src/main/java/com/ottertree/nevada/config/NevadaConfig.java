@@ -56,6 +56,6 @@ public class NevadaConfig extends Config {
         addDependency("TabStats_TablistStat", "TabStats_ShowStat");
         addDependency("TabStats_TablistStat", "TabStats_Enable");
 
-        addDependency("Preagme_OnlyShowOnce", "Pregame_ShowPlayerStats");
+        addDependency("Pregame_OnlyShowOnce", "Pregame_ShowPlayerStats");
     }
 }

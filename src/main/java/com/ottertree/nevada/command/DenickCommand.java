@@ -7,8 +7,6 @@ import com.ottertree.nevada.util.SkinUtil;
 
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetworkPlayerInfo;
 
 @Command(value="denick", description="/denick <skin|finals|beds> <value>", aliases={"dn"})
 public class DenickCommand {
@@ -30,23 +28,7 @@ public class DenickCommand {
     private void denickSkin(String name) {
         ChatUtil.send(ChatUtil.PREFIX + "§8Denicking §7" + name + "§8...");
 
-        NetworkPlayerInfo playerInfo = null;
-
-        for (NetworkPlayerInfo info : Minecraft.getMinecraft()
-            .getNetHandler()
-            .getPlayerInfoMap()) {
-            if (info.getGameProfile().getName().equalsIgnoreCase(name)) {
-                playerInfo = info;
-                break;
-            }
-        }
-
-        if (playerInfo == null) {
-            ChatUtil.send(ChatUtil.INDENT + "§8Player not found");
-            return;
-        }
-
-        String realName = SkinUtil.getRealName(playerInfo);
+        String realName = SkinUtil.skinDenick(name);
 
         if (realName != null)
             Hypixel.INSTANCE.getPlayerProfileFromName(realName).thenAccept(profile -> {

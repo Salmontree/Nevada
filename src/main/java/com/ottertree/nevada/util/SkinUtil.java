@@ -4,10 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.ottertree.nevada.cache.PlayerNickCache;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 
 public class SkinUtil {
@@ -243,6 +247,30 @@ public class SkinUtil {
             "1d9e8dafe7d87bb7cba7eb3d8d2d5bf58eab72ecdfdf9ecce3d1c03871c0"
         )
     );
+
+    public static String skinDenick(String nick) {
+        String cachedNick = PlayerNickCache.INSTANCE.getNick(nick);
+        if (cachedNick != null) return cachedNick;
+
+        NetworkPlayerInfo playerInfo = null;
+
+        for (NetworkPlayerInfo info : Minecraft.getMinecraft()
+            .getNetHandler()
+            .getPlayerInfoMap()) {
+            if (info.getGameProfile().getName().equalsIgnoreCase(nick)) {
+                playerInfo = info;
+                break;
+            }
+        }
+
+        if (playerInfo == null) {
+            return null;
+        }
+
+        String realName = SkinUtil.getRealName(playerInfo);
+        PlayerNickCache.INSTANCE.cacheNick(nick, realName);
+        return realName;
+    }
 
     public static String getRealName(NetworkPlayerInfo playerInfo) {
         GameProfile gameProfile = playerInfo.getGameProfile();
