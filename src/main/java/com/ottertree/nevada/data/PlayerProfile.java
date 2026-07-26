@@ -8,8 +8,8 @@ public class PlayerProfile {
         public int losses;
         public int level;
 
-        public float getFKDR() { return finalDeaths != 0.0f ? (float)finalKills / finalDeaths : 0.0f; }
-        public float getWLR() { return losses != 0.0f ? (float)wins / losses : 0.0f; }
+        public float getFKDR() { return finalDeaths != 0.0f ? (float)finalKills / finalDeaths : finalKills; }
+        public float getWLR() { return losses != 0.0f ? (float)wins / losses : wins; }
     }
     public Bedwars bedwars = new Bedwars();
 
