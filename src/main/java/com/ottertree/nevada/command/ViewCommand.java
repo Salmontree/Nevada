@@ -29,7 +29,7 @@ public class ViewCommand {
                 });
             }).exceptionally(e -> {
                 Throwable cause = e instanceof java.util.concurrent.CompletionException ? e.getCause() : e;
-                ChatUtil.send(ChatUtil.PREFIX + "§cError fetching tags: " + cause);
+                ChatUtil.send(ChatUtil.PREFIX + "§cError: " + cause);
                 return null;
             });
         });

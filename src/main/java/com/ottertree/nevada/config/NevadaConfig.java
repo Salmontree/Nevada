@@ -20,6 +20,8 @@ public class NevadaConfig extends Config {
     public String APIKeys_Hypixel;
     @Text(name="Urchin", secure=true, category="API Keys")
     public String APIKeys_Urchin;
+    @Text(name="Aurora", secure=true, category="API Keys")
+    public String APIKeys_Aurora;
 
     @Switch(name="Enable Tab Stats", category="Tab Stats")
     public Boolean TabStats_Enable = true;
