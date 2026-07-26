@@ -7,6 +7,7 @@ import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.api.Hypixel;
 import com.ottertree.nevada.data.PlayerProfile;
 import com.ottertree.nevada.util.BedwarsUtil;
+import com.ottertree.nevada.util.SkinUtil;
 import com.ottertree.nevada.util.TaglistUtil;
 
 import cc.polyfrost.oneconfig.utils.hypixel.HypixelUtils;
@@ -37,6 +38,23 @@ public abstract class GuiPlayerTabOverlayMixin {
                 PlayerProfile profile = future.getNow(null);
                 if (profile != null) {
                     if (profile.hypixel.isNick) {
+                        String skinDenick = SkinUtil.skinDenick(nwProfile.getName());
+                        if (skinDenick != null) {
+                            // Player's been successfully denicked
+                            CompletableFuture<PlayerProfile> nickFuture = Hypixel.INSTANCE.getPlayerProfileFromUUID(nwProfile.getId().toString());
+                            if (nickFuture.isDone() && !nickFuture.isCompletedExceptionally()) {
+                                PlayerProfile denickedProfile = nickFuture.getNow(null);
+                                if (profile != null) {
+                                    cir.setReturnValue("§5[NICK] " + cir.getReturnValue() + "§5(" + denickedProfile.hypixel.displayName + "§5)");
+                                    return;
+                                }
+                                else {
+                                    cir.setReturnValue("§5[NICK] " + cir.getReturnValue());
+                                    return;
+                                }
+                            }
+                        }
+
                         cir.setReturnValue("§5[NICK] " + cir.getReturnValue());
                         return;
                     }

@@ -18,4 +18,8 @@ public class ChatUtil {
     public static void say(String text) {
         mc.thePlayer.sendChatMessage(text);
     }
+
+    public static void setActionbar(String text) {
+        mc.ingameGUI.setRecordPlayingMessage(text);
+    }
 }
