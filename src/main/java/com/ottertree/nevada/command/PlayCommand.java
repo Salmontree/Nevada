@@ -10,6 +10,13 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 public class PlayCommand {
     @Main
     private void handle(@Greedy String game) {
+        switch (game) {
+            case "bw1": ChatUtil.say("/play bedwars_eight_one"); return;
+            case "bw2": ChatUtil.say("/play bedwars_eight_two"); return;
+            case "bw3": ChatUtil.say("/play bedwars_four_three"); return;
+            case "bw4": ChatUtil.say("/play bedwars_four_four"); return;
+        }
+
         ChatUtil.say("/play " + game);
     }
 }
