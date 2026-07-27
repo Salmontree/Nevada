@@ -18,7 +18,7 @@
 
 ### Tab Stats
 
-Say goodbye to external overlays! Your tablist is (optionally) adapted to include stats and tags for each player. _Only works in Bedwars._
+The tablist is (optionally) adapted to include stats and tags for each player. _Only works in Bedwars._
 - `Bedwars Level`
 - `Tags`
 - One stat from the list: `Finals`, `FKDR`, `Wins`, `WLR`, `Beds`, `BBLR`
@@ -26,7 +26,6 @@ Say goodbye to external overlays! Your tablist is (optionally) adapted to includ
 ### Denicking
 
 While in-game, players who are nicked but have their original skin are automatically denicked and their real names are shown in the tablist. _Only works in Bedwars._
-
 
 ### Anticheat
 
