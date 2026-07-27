@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.cache.PlayerTaglistCache;
+import com.ottertree.nevada.data.NevadaException;
 import com.ottertree.nevada.data.Tag;
 import com.ottertree.nevada.util.PlayerUtil;
 
@@ -70,11 +71,13 @@ public class Urchin {
             connection.setRequestProperty("X-API-Key", Nevada.config.APIKeys_Urchin);
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
-            int code = connection.getResponseCode();
-            if (code == 404)
-                return new ArrayList<>();
-            else if (code != HttpURLConnection.HTTP_OK)
-                throw new Exception(connection.getResponseMessage());
+            switch (connection.getResponseCode()) {
+                case 200: break;
+                case 401: throw new NevadaException("Invalid Urchin API key");
+                case 403: throw new NevadaException("Locked Urchin API key");
+                case 429: throw new NevadaException("Urchin API rate limit reached");
+                default: throw new Exception(connection.getResponseMessage());
+            }
 
             ArrayList<Tag> tagList = new ArrayList<Tag>();
             JsonArray tags = JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("tags").getAsJsonArray();
@@ -124,11 +127,13 @@ public class Urchin {
             connection.setRequestProperty("X-API-Key", Nevada.config.APIKeys_Urchin);
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
-            int code = connection.getResponseCode();
-            if (code == 404)
-                return 0;
-            else if (code != HttpURLConnection.HTTP_OK)
-                throw new Exception(connection.getResponseMessage());
+            switch (connection.getResponseCode()) {
+                case 200: break;
+                case 401: throw new NevadaException("Invalid Urchin API key");
+                case 403: throw new NevadaException("Locked Urchin API key");
+                case 429: throw new NevadaException("Urchin API rate limit reached");
+                default: throw new Exception(connection.getResponseMessage());
+            }
 
             return JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().get("gexp").getAsJsonObject().get("total").getAsInt();
         } finally {

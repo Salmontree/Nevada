@@ -2,6 +2,7 @@ package com.ottertree.nevada.api;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +12,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
 import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.cache.PlayerProfileCache;
+import com.ottertree.nevada.data.NevadaException;
 import com.ottertree.nevada.data.PlayerProfile;
 import com.ottertree.nevada.util.PlayerUtil;
 
@@ -23,15 +25,22 @@ import net.hypixel.api.reply.PlayerReply.Player;
 public class Hypixel {
     public static final Hypixel INSTANCE = new Hypixel();
 
-    private static HypixelHttpClient client;
-    private static HypixelAPI api;
+    private HypixelHttpClient client;
+    private HypixelAPI api;
 
-    private static final ExecutorService executor = Executors.newFixedThreadPool(12, new ThreadFactoryBuilder().setNameFormat("hypixel-api-%d").setDaemon(true).build());
-    private static final RateLimiter rateLimiter = RateLimiter.create(7.0);
-    private static final ConcurrentHashMap<String, CompletableFuture<PlayerProfile>> pendingPlayerRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, CompletableFuture<GuildReply>> pendingGuildRequests = new ConcurrentHashMap<>();
+    private String cachedKey;
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(12, new ThreadFactoryBuilder().setNameFormat("hypixel-api-%d").setDaemon(true).build());
+    private final RateLimiter rateLimiter = RateLimiter.create(7.0);
+    private final ConcurrentHashMap<String, CompletableFuture<PlayerProfile>> pendingPlayerRequests = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CompletableFuture<GuildReply>> pendingGuildRequests = new ConcurrentHashMap<>();
 
     public Hypixel() {
+        refresh();
+    }
+
+    private void refresh() {
+        cachedKey = Nevada.config.APIKeys_Hypixel;
         client = new ApacheHttpClient(UUID.fromString(Nevada.config.APIKeys_Hypixel));
         api = new HypixelAPI(client);
     }
@@ -43,7 +52,13 @@ public class Hypixel {
     public CompletableFuture<PlayerProfile> getPlayerProfileFromUUID(String uuid) {
         if (uuid == null || uuid.isEmpty()) {
             CompletableFuture<PlayerProfile> failed = new CompletableFuture<>();
-            failed.completeExceptionally(new Exception("Player not found"));
+            failed.completeExceptionally(new NevadaException("Player not found"));
+            return failed;
+        }
+        if (Nevada.config.APIKeys_Hypixel != cachedKey) { refresh(); }
+        if (Nevada.config.APIKeys_Hypixel.isEmpty()) {
+            CompletableFuture<PlayerProfile> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new NevadaException("Invalid Hypixel API key"));
             return failed;
         }
 
@@ -53,7 +68,8 @@ public class Hypixel {
         return pendingPlayerRequests.computeIfAbsent(uuid, id ->
             CompletableFuture.supplyAsync(() -> { rateLimiter.acquire(); return null; }, executor)
                 .thenCompose(ignored -> api.getPlayerByUuid(id))
-                .thenApply(playerReply -> buildProfile(id, playerReply.getPlayer()))
+                .thenApply(playerReply -> { if (!playerReply.isSuccess()) throw new CompletionException(new NevadaException(playerReply.getCause())); return buildProfile(id, playerReply.getPlayer());  })
+                .handle((profile, e) -> { if (e != null && e.getMessage().contains("Invalid API key")) throw new CompletionException(new NevadaException("Invalid Hypixel API key")); return profile; })
                 .whenComplete((profile, err) -> pendingPlayerRequests.remove(id))
         );
     }
@@ -65,7 +81,13 @@ public class Hypixel {
     public CompletableFuture<GuildReply> getGuildFromPlayerUUID(String uuid) {
         if (uuid == null || uuid.isEmpty()) {
             CompletableFuture<GuildReply> failed = new CompletableFuture<>();
-            failed.completeExceptionally(new Exception("Player not found"));
+            failed.completeExceptionally(new NevadaException("Player not found"));
+            return failed;
+        }
+        if (Nevada.config.APIKeys_Hypixel != cachedKey) { refresh(); }
+        if (Nevada.config.APIKeys_Hypixel.isEmpty()) {
+            CompletableFuture<GuildReply> failed = new CompletableFuture<>();
+            failed.completeExceptionally(new NevadaException("Invalid Hypixel API Key"));
             return failed;
         }
 

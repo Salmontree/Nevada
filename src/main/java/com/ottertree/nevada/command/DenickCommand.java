@@ -1,5 +1,7 @@
 package com.ottertree.nevada.command;
 
+import java.util.concurrent.CompletionException;
+
 import com.ottertree.nevada.api.Aurora;
 import com.ottertree.nevada.api.Hypixel;
 import com.ottertree.nevada.util.ChatUtil;
@@ -19,11 +21,11 @@ public class DenickCommand {
                 case "beds": denickBeds(Integer.valueOf(value)); return;
             }
         } catch (NumberFormatException e) {
-            ChatUtil.send(ChatUtil.PREFIX + "§c'" + key + "' must be an integer");
+            ChatUtil.send(ChatUtil.PREFIX + "§8'" + key + "' must be an integer");
             return;
         }
 
-        ChatUtil.send(ChatUtil.PREFIX + "§cInvalid usage: use /denick <skin|finals|beds> <value>");
+        ChatUtil.send(ChatUtil.PREFIX + "§8Invalid usage: use /denick <skin|finals|beds> <value>");
     }
     private void denickSkin(String name) {
         ChatUtil.send(ChatUtil.PREFIX + "§8Denicking §7" + name + "§8...");
@@ -33,9 +35,18 @@ public class DenickCommand {
         if (realName != null)
             Hypixel.INSTANCE.getPlayerProfileFromName(realName).thenAccept(profile -> {
                 ChatUtil.send(ChatUtil.INDENT + "§aPlayer denicked as " + profile.hypixel.displayName + "§a!");
+            }).exceptionally(e -> {
+                if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
+                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    return null;
+                }
+
+                ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick " + name);
+                e.printStackTrace();
+                return null;
             });
         else
-            ChatUtil.send(ChatUtil.INDENT + "§cCould not denick " + name);
+            ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick " + name);
     }
 
     private void denickFinals(int finals) {
@@ -50,6 +61,15 @@ public class DenickCommand {
             responses.forEach(response -> {
                 ChatUtil.send(ChatUtil.INDENT + "§8Found player: §7" + response.name + " §8(" + response.distance + ")");
             });
+        }).exceptionally(e -> {
+            if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
+                ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                return null;
+            }
+
+            ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick player");
+            e.printStackTrace();
+            return null;
         });
     }
 
@@ -65,6 +85,15 @@ public class DenickCommand {
             responses.forEach(response -> {
                 ChatUtil.send(ChatUtil.INDENT + "§8Found player: §7" + response.name + " §8(" + response.distance + ")");
             });
+        }).exceptionally(e -> {
+            if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
+                ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                return null;
+            }
+
+            ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick player");
+            e.printStackTrace();
+            return null;
         });
     }
 }

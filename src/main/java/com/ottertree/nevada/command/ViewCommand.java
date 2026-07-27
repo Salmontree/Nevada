@@ -1,5 +1,8 @@
 package com.ottertree.nevada.command;
 
+import java.util.concurrent.CompletionException;
+
+import com.ottertree.nevada.data.NevadaException;
 import com.ottertree.nevada.util.ChatUtil;
 import com.ottertree.nevada.util.PlayerUtil;
 import com.ottertree.nevada.util.TaglistUtil;
@@ -20,7 +23,7 @@ public class ViewCommand {
 
         PlayerUtil.playerExists(username).thenAccept(exists -> {
             if (!exists) {
-                ChatUtil.send(ChatUtil.INDENT + "§8Player not found");
+                ChatUtil.send(ChatUtil.PREFIX + "§8Player not found");
                 return;
             }
             
@@ -33,8 +36,13 @@ public class ViewCommand {
                     ChatUtil.send(ChatUtil.INDENT + "§8Found Urchin tag: §4" + tag.typeTitle + " §7(" + tag.reason + ")");
                 });
             }).exceptionally(e -> {
-                Throwable cause = e instanceof java.util.concurrent.CompletionException ? e.getCause() : e;
-                ChatUtil.send(ChatUtil.PREFIX + "§cError: " + cause);
+                if ((e instanceof CompletionException ? e.getCause() : e) instanceof NevadaException) {
+                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    return null;
+                }
+
+                ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't fetch tags");
+                e.printStackTrace();
                 return null;
             });
         });

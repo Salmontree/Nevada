@@ -13,14 +13,6 @@ import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.data.OptionSize;
 
 public class NevadaConfig extends Config {
-    // API Keys
-    @Text(name="Hypixel", secure=true, category="API Keys")
-    public String APIKeys_Hypixel;
-    @Text(name="Urchin", secure=true, category="API Keys")
-    public String APIKeys_Urchin;
-    @Text(name="Aurora", secure=true, category="API Keys")
-    public String APIKeys_Aurora;
-
     // Tab Stats
     @Switch(name="Enable Tab Stats", category="Tab Stats")
     public boolean TabStats_Enable = true;
@@ -41,6 +33,14 @@ public class NevadaConfig extends Config {
     public int TabStats_TablistStat_Bedwars = 1; // FKDR
     @Dropdown(name="Duels Stat", options={"Wins", "WLR", "Current Winstreak", "Best Winstreak"}, category="Tab Stats", size=OptionSize.DUAL)
     public int TabStats_TablistStat_Duels = 1; // WLR
+
+    // API Keys
+    @Text(name="Hypixel", secure=true, category="API Keys")
+    public String APIKeys_Hypixel;
+    @Text(name="Urchin", secure=true, category="API Keys")
+    public String APIKeys_Urchin;
+    @Text(name="Aurora", secure=true, category="API Keys")
+    public String APIKeys_Aurora;
 
     // Pregame
     @Switch(name="Auto-show Player Stats in Pregame", category="Pregame")

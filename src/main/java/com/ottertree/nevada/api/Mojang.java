@@ -21,7 +21,7 @@ public class Mojang {
     public static CompletableFuture<String> getPlayerUUID(String name) {
         if (name == null || name.isEmpty()) {
             CompletableFuture<String> failed = new CompletableFuture<>();
-            failed.completeExceptionally(new Exception("Player not found"));
+            failed.completeExceptionally(new Error("Player not found"));
             return failed;
         }
  
@@ -29,7 +29,7 @@ public class Mojang {
 
         if (key == null) {
             CompletableFuture<String> failed = new CompletableFuture<>();
-            failed.completeExceptionally(new Exception("Undefined error, please report to the developer!"));
+            failed.completeExceptionally(new Exception("key == null returned true somehow"));
             return failed;
         }
  
@@ -75,7 +75,7 @@ public class Mojang {
     public static CompletableFuture<Boolean> playerExists(String name) {
         if (name == null || name.isEmpty()) {
             CompletableFuture<Boolean> failed = new CompletableFuture<>();
-            failed.completeExceptionally(new Exception("Player not found"));
+            failed.completeExceptionally(new Error("Player not found"));
             return failed;
         }
  
@@ -83,7 +83,7 @@ public class Mojang {
 
         if (key == null) {
             CompletableFuture<Boolean> failed = new CompletableFuture<>();
-            failed.completeExceptionally(new Exception("Undefined error, please report to the developer!"));
+            failed.completeExceptionally(new Exception("key == null returned true somehow"));
             return failed;
         }
  

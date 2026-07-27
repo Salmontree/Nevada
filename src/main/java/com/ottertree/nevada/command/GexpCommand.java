@@ -1,5 +1,7 @@
 package com.ottertree.nevada.command;
 
+import java.util.concurrent.CompletionException;
+
 import com.ottertree.nevada.api.Hypixel;
 import com.ottertree.nevada.api.Urchin;
 import com.ottertree.nevada.util.ChatUtil;
@@ -39,6 +41,15 @@ public class GexpCommand {
                 Hypixel.INSTANCE.getPlayerProfileFromName(user).thenAccept(profile -> {
                     ChatUtil.send(ChatUtil.INDENT + "§7" + profile.hypixel.displayName + " §8collected §7" + COMMA_FORMAT.format(gexp) + " §8" + period + " gexp");
                 });
+            }).exceptionally(e -> {
+                if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
+                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    return null;
+                }
+
+                ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't lookup player stats");
+                e.printStackTrace();
+                return null;
             });
         });
     }

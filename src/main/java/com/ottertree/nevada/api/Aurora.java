@@ -55,8 +55,12 @@ public class Aurora {
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new Exception(connection.getResponseMessage());
+            switch (connection.getResponseCode()) {
+                case 200: break;
+                case 401: throw new Error("Invalid Aurora API key");
+                case 429: throw new Error("Aurora API rate limit reached");
+                case 500: throw new Error("Aurora API error");
+                default: throw new Exception(connection.getResponseMessage());
             }
 
             JsonObject fullApiResponse = JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject();

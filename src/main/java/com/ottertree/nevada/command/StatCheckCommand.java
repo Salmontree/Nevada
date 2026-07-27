@@ -1,6 +1,9 @@
 package com.ottertree.nevada.command;
 
+import java.util.concurrent.CompletionException;
+
 import com.ottertree.nevada.api.Hypixel;
+import com.ottertree.nevada.data.NevadaException;
 import com.ottertree.nevada.util.BedwarsUtil;
 import com.ottertree.nevada.util.BuildBattleUtil;
 import com.ottertree.nevada.util.ChatUtil;
@@ -20,16 +23,21 @@ public class StatCheckCommand {
 
         final String game = gameName.toLowerCase();
         switch (game) {
-            case "bw": break; case "bb": break; case "duels": break; case "bridge": break; default: { ChatUtil.send(ChatUtil.PREFIX + "§cError: Invalid game (options include bw, bb)"); return; }
+            case "bw": break; case "bb": break; case "duels": break; case "bridge": break; default: { ChatUtil.send(ChatUtil.PREFIX + "§8Invalid game (options include bw, bb, duels, bridge)"); return; }
         }
 
         PlayerUtil.playerExists(username).thenAccept(exists -> {
             if (!exists) {
-                ChatUtil.send(ChatUtil.INDENT + "§8Player not found");
+                ChatUtil.send(ChatUtil.PREFIX + "§8Player not found");
                 return;
             }
 
             Hypixel.INSTANCE.getPlayerProfileFromName(username).thenAccept(profile -> {
+                if (profile.hypixel.isNick) {
+                    ChatUtil.send(ChatUtil.PREFIX + "§8Player not found");
+                    return;
+                }
+                
                 TaglistUtil.getFullTablistCompacted(username).thenAccept(taglistResult -> {
                     String taglist = taglistResult;
                     if (!taglist.isEmpty()) taglist += " ";
@@ -40,17 +48,31 @@ public class StatCheckCommand {
                         case "bridge": ChatUtil.send(ChatUtil.INDENT + taglist + profile.hypixel.displayName + "§8 - Wins: §7" + DuelsUtil.colorWins(profile.duels.bridge.wins) + "§8 - WLR: §7" + DuelsUtil.colorWLR(profile.duels.bridge.getWLR()) + "§8 - BWS: §7" + DuelsUtil.colorBWS(profile.duels.bridge.best_winstreak)); break;
                     }
                 }).exceptionally(e -> {
-                    ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't lookup player stats");
-                    e.printStackTrace();
+                    switch (game) {
+                        case "bw": ChatUtil.send(ChatUtil.INDENT + BedwarsUtil.formatLevel(profile.bedwars.level) + " " + profile.hypixel.displayName + "§8 - Finals: " + BedwarsUtil.colorFinals(profile.bedwars.finalKills) + " §8FKDR: " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()) + " §8Wins: " + BedwarsUtil.colorFinals(profile.bedwars.wins) + " §8WLR: " + BedwarsUtil.colorWLR(profile.bedwars.getWLR()) + " §8Beds: " + BedwarsUtil.colorBedsBroken(profile.bedwars.bedsBroken) + " §8BBLR: " + BedwarsUtil.colorBBLR(profile.bedwars.getBBLR())); break;
+                        case "bb": ChatUtil.send(ChatUtil.INDENT + BuildBattleUtil.formatScore(profile.buildbattle.score) + " " + profile.hypixel.displayName + " §8Wins: §7" + profile.buildbattle.wins + " §8Solo Wins: §7" + profile.buildbattle.soloWins + " §8Doubles Wins: §7" + profile.buildbattle.doublesWins + " §8GTB Wins: §7" + profile.buildbattle.gtbWins); break;
+                        case "duels": ChatUtil.send(ChatUtil.INDENT + profile.hypixel.displayName + "§8 - Wins: §7" + DuelsUtil.colorWins(profile.duels.overall.wins) + "§8 - WLR: §7" + DuelsUtil.colorWLR(profile.duels.overall.getWLR()) + "§8 - BWS: §7" + DuelsUtil.colorBWS(profile.duels.overall.best_winstreak) + "§8 - WS: §7" + DuelsUtil.colorWS(profile.duels.overall.winstreak)); break;
+                        case "bridge": ChatUtil.send(ChatUtil.INDENT + profile.hypixel.displayName + "§8 - Wins: §7" + DuelsUtil.colorWins(profile.duels.bridge.wins) + "§8 - WLR: §7" + DuelsUtil.colorWLR(profile.duels.bridge.getWLR()) + "§8 - BWS: §7" + DuelsUtil.colorBWS(profile.duels.bridge.best_winstreak)); break;
+                    }
                     return null;
                 });
             }).exceptionally(e -> {
-                ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't lookup player stats");
+                if ((e instanceof CompletionException ? e.getCause() : e) instanceof NevadaException) {
+                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    return null;
+                }
+
+                ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't fetch player stats");
                 e.printStackTrace();
                 return null;
             });
         }).exceptionally(e -> {
-            ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't lookup player stats");
+            if ((e instanceof CompletionException ? e.getCause() : e) instanceof NevadaException) {
+                ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                return null;
+            }
+            
+            ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't fetch player stats");
             e.printStackTrace();
             return null;
         });
