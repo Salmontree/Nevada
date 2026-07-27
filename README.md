@@ -18,16 +18,20 @@
 
 ### Tab Stats
 
-The tablist is (optionally) adapted to include stats and tags for each player. _Only works in Bedwars._
-- `Bedwars Level`
-- `Tags`
-- `Name`
-- One stat from the list: `Finals`, `FKDR`, `Wins`, `WLR`, `Beds`, `BBLR`
+The tablist is (optionally) adapted to include stats and tags for each player. _Only works in Bedwars and Duels._
+- `Bedwars`
+  - `Level`
+  - `Tags`
+  - `Name`
+  - One stat from the list: `Finals`, `FKDR`, `Wins`, `WLR`, `Beds`, `BBLR`
+- `Duels`
+  - `Tags`
+  - `Name`
+  - One stat from the list: `Wins`, `WLR`, `Current Winstreak`, `Best Winstreak`
 
 ### Denicking
 
-While in-game, players who are nicked but have their original skin are automatically denicked and their real names are shown in the tablist. _Only works in Bedwars._
-
+While in-game, players who are nicked but have their original skin are automatically denicked and their real names are shown in the tablist. _Automatic denicking only works in Bedwars and Duels (the command works anywhere)._
 
 ### Anticheat
 
