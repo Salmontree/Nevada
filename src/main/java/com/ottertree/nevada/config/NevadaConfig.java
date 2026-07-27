@@ -36,8 +36,11 @@ public class NevadaConfig extends Config {
     private boolean TabStats_TablistStat_Info;
     @Switch(name="Show Tablist Stat", category="Tab Stats")
     public boolean TabStats_ShowStat = true;
-    @Dropdown(name="Tablist Stat", options={"Finals", "FKDR", "Wins", "WLR", "Beds", "BBLR"}, category="Tab Stats", size=OptionSize.DUAL)
-    public int TabStats_TablistStat = 1; // FKDR
+
+    @Dropdown(name="Bedwars Stat", options={"Finals", "FKDR", "Wins", "WLR", "Beds", "BBLR"}, category="Tab Stats", size=OptionSize.DUAL)
+    public int TabStats_TablistStat_Bedwars = 1; // FKDR
+    @Dropdown(name="Duels Stat", options={"Wins", "WLR", "Current Winstreak", "Best Winstreak"}, category="Tab Stats", size=OptionSize.DUAL)
+    public int TabStats_TablistStat_Duels = 1; // WLR
 
     // Pregame
     @Switch(name="Auto-show Player Stats in Pregame", category="Pregame")

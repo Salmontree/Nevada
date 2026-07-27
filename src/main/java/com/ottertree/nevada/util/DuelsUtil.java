@@ -19,7 +19,7 @@ public class DuelsUtil {
         try {
             Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
             for (Score score : scoreboard.getSortedScores(scoreboard.getObjectiveInDisplaySlot(1))) {
-                if (inDuels() && ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName()).contains("Level:"))
+                if (inDuels() && ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName()).contains("Duel other players with:"))
                     return true;
             }
         } catch (Exception e) {

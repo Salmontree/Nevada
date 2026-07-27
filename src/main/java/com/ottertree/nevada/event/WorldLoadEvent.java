@@ -11,7 +11,7 @@ public class WorldLoadEvent {
     public void onWorldLoad(WorldEvent.Load event) {
         if (event.world.isRemote) {
             PlayerProfileCache.INSTANCE.clear();
-            PlayerNickCache.INSTANCE.clear(); // you never know, someone might change their nick to be their normal player skin for some reason
+            PlayerNickCache.INSTANCE.clear();
         }
     }
 }
