@@ -1,40 +1,41 @@
-# Nevada
-
-![Powered by OneConfig](https://polyfrost.org/media/branding/badges/badge_1.svg)
-![Minecraft](https://img.shields.io/badge/Minecraft-1.8.9-brightgreen)
-![Forge](https://img.shields.io/badge/Forge-1.8.9--11.15.1-orange)
-![License](https://img.shields.io/badge/license-MIT-blue)
-
----
-
-## Features
+## Nevada
 
 ### Commands
 
-| Command | Description |
-|---|---|
-| `/play` | Shortcuts for the `/play` command (`/play bw 1`, `/play bw solo`, `/play bw castle`, etc). |
-| `/statcheck <username> <mode>` | Look up someone's stats in a specific game. |
-| `/status <player>` | Check a player's Hypixel status if their API is turned on. |
-| `/tagview <player>` | View a player's Urchin tags. |
-| `/uuid <player>` | Convert a Minecraft username into its UUID. |
+- `/denick <skin|finals|beds> <value>` - Denick nicked players on Hypixel
+- `/statcheck <username> <mode>` - Fetch player stats on certain Hypixel gamemodes (currently supported modes include bedwars (`bw`) and build battle (`bb`)
+- `/view [username]` - Fetch player blacklist tags. Currently only supports Urchin.
+- `/gexp [username] [daily|weekly|monthly]` - Fetch player's Guild experience obtained in a specified time period
+- `/play <game>` - Shortcuts for Hypixel's /play. Shortcuts include:
+  - `bw1` - Bedwars Solo
+  - `bw2` - Bedwars Doubles
+  - `bw3` - Bedwars 3v3v3v3
+  - `bw4` - Bedwars 4v4v4v4
+  - `bridge1` - Duels - Bridge Solo
+  - `bridge2` - Duels - Bridge Doubles
+  - `bridge3` - Duels - Bridge 3v3
+  - `bridge4` - Duels - Bridge Teams
 
-## Setup
+### Tab Stats
 
-### Installation
+Say goodbye to external overlays! Your tablist is (optionally) adapted to include stats and tags for each player. _Only works in Bedwars._
+- `Bedwars Level`
+- `Tags`
+- One stat from the list: `Finals`, `FKDR`, `Wins`, `WLR`, `Beds`, `BBLR`
 
-1. Install [Minecraft Forge](https://files.minecraftforge.net/) for **1.8.9**.
-2. Download the latest release from the [Releases](../../releases) page.
-3. Drop the `.jar` into your `.minecraft/mods` folder.
-4. Launch the game with 1.8.9 Forge.
+### Denicking
 
-### Requirements
+While in-game, players who are nicked but have their original skin are automatically denicked and their real names are shown in the tablist. _Only works in Bedwars._
 
-- Minecraft **1.8.9**
-- Minecraft Forge **11.15.1** or later
-- A Hypixel API key
-- A Urchin API key
 
-## License
+### Anticheat
 
-Licensed under the [MIT License](LICENSE).
+- Removed `NoSlow` since it's mostly unused and false flags 90% of the time
+- Added `Eagle` (diagonal legitscaff)
+- Added `Scaffold` (horizontal legitscaff)
+- Added `Tower` (block-stacking too fast)
+- Added `Autoblock` (hitting while blocking)
+
+### Issues
+
+Sometimes, APIs reach their rate limits and stop working. This can be seen very clearly when enabling Tab Stats in a large lobby (why would you even do this?). Just try loading stats again after a few minutes and it should work fine. Tab Stats automatically loads stats after the API starts returning values again.
