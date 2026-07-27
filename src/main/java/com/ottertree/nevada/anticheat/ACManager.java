@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.ottertree.nevada.anticheat.check.NoSlowCheck;
+import com.ottertree.nevada.anticheat.check.AutoblockCheck;
 import com.ottertree.nevada.anticheat.check.Check;
+import com.ottertree.nevada.anticheat.check.EagleCheck;
+import com.ottertree.nevada.anticheat.check.ScaffoldCheck;
+import com.ottertree.nevada.anticheat.check.TowerCheck;
 
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.Potion;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -26,7 +31,10 @@ public class ACManager {
     public void initialize() {
         MinecraftForge.EVENT_BUS.register(this);
 
-        checks.add(new NoSlowCheck());
+        checks.add(new AutoblockCheck());
+        checks.add(new EagleCheck());
+        checks.add(new ScaffoldCheck());
+        checks.add(new TowerCheck());
     }
 
     private void runChecks(ACPlayerData player) {
@@ -42,7 +50,7 @@ public class ACManager {
         ACPlayerData data = playerDataMap.get(event.player.getUniqueID());
         if (data == null)
             data = new ACPlayerData();
-            
+
         data.displayName = event.player.getDisplayNameString();
         data.uuid = event.player.getUniqueID();
 
@@ -52,6 +60,28 @@ public class ACManager {
         data.isHoldingConsumable = event.player.getHeldItem() != null && (event.player.getHeldItem().getItem().getItemUseAction(event.player.getHeldItem()) == EnumAction.EAT || event.player.getHeldItem().getItem().getItemUseAction(event.player.getHeldItem()) == EnumAction.DRINK);
 
         data.isSprinting = event.player.isSprinting();
+
+        boolean isBlockingNow = event.player.isBlocking();
+        if (isBlockingNow && !data.isBlocking) {
+            data.blockingStartTime = System.currentTimeMillis();
+        } else if (!isBlockingNow) {
+            data.blockingStartTime = 0;
+        }
+        data.isBlocking = isBlockingNow;
+        data.swingProgress = event.player.swingProgress;
+
+        data.pitch = event.player.rotationPitch;
+        data.onGround = event.player.onGround;
+        data.isHoldingBlock = event.player.getHeldItem() != null && event.player.getHeldItem().getItem() instanceof ItemBlock;
+        data.isSneaking = event.player.isSneaking();
+        data.motionX = event.player.motionX;
+        data.motionY = event.player.motionY;
+        data.motionZ = event.player.motionZ;
+
+        data.posY = event.player.posY;
+
+        data.hasJumpBoost = event.player.isPotionActive(Potion.jump);
+        data.hurtTime = event.player.hurtTime;
 
         playerDataMap.put(event.player.getUniqueID(), data);
         runChecks(data);
