@@ -21,19 +21,21 @@
 The tablist is (optionally) adapted to include stats and tags for each player. _Only works in Bedwars._
 - `Bedwars Level`
 - `Tags`
+- `Name`
 - One stat from the list: `Finals`, `FKDR`, `Wins`, `WLR`, `Beds`, `BBLR`
 
 ### Denicking
 
 While in-game, players who are nicked but have their original skin are automatically denicked and their real names are shown in the tablist. _Only works in Bedwars._
 
+
 ### Anticheat
 
-- Removed `NoSlow` since it's mostly unused and false flags 90% of the time
-- Added `Eagle` (diagonal legitscaff)
-- Added `Scaffold` (horizontal legitscaff)
-- Added `Tower` (block-stacking too fast)
-- Added `Autoblock` (hitting while blocking)
+Checks for some common detectable cheats, which inform you of any flags. Checks include:
+- `Eagle` (diagonal legitscaff)
+- `Scaffold` (horizontal legitscaff)
+- `Tower` (block-stacking too fast)
+- `Autoblock` (hitting while blocking)
 
 ### Issues
 
