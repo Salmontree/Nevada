@@ -51,7 +51,7 @@ public abstract class GuiPlayerTabOverlayMixin {
                             PlayerProfile denickedProfile = nickFuture.getNow(null);
 
                             String tablistStatTemp = "";
-                            switch (Nevada.config.TabStats_TablistStat_Bedwars) {
+                            switch (Nevada.config.TabStats_Bedwars_TablistStat) {
                                 case 0: tablistStatTemp = BedwarsUtil.colorFinals(denickedProfile.bedwars.finalKills); break;
                                 case 1: tablistStatTemp = BedwarsUtil.colorFKDR(denickedProfile.bedwars.getFKDR()); break;
                                 case 2: tablistStatTemp = BedwarsUtil.colorWins(denickedProfile.bedwars.wins); break;
@@ -61,14 +61,14 @@ public abstract class GuiPlayerTabOverlayMixin {
                             }
                             final String tablistStat = tablistStatTemp;
 
-                            if (Nevada.config.TabStats_ShowTags) {
+                            if (Nevada.config.TabStats_Bedwars_ShowTags) {
                                 TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
                                     if (!taglist.isEmpty()) taglist += " ";
 
-                                    cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(denickedProfile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(denickedProfile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                                 });
                             } else {
-                                cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                                cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                             }
 
                             if (firstDenick)
@@ -83,7 +83,7 @@ public abstract class GuiPlayerTabOverlayMixin {
                 }
 
                 String tablistStatTemp = "";
-                switch (Nevada.config.TabStats_TablistStat_Bedwars) {
+                switch (Nevada.config.TabStats_Bedwars_TablistStat) {
                     case 0: tablistStatTemp = BedwarsUtil.colorFinals(profile.bedwars.finalKills); break;
                     case 1: tablistStatTemp = BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()); break;
                     case 2: tablistStatTemp = BedwarsUtil.colorWins(profile.bedwars.wins); break;
@@ -93,14 +93,14 @@ public abstract class GuiPlayerTabOverlayMixin {
                 }
                 final String tablistStat = tablistStatTemp;
 
-                if (Nevada.config.TabStats_ShowTags) {
+                if (Nevada.config.TabStats_Bedwars_ShowTags) {
                     TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
                         if (!taglist.isEmpty()) taglist += " ";
 
-                        cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                        cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                     });
                 } else {
-                    cir.setReturnValue((Nevada.config.TabStats_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                 }
             }
         }
@@ -124,7 +124,7 @@ public abstract class GuiPlayerTabOverlayMixin {
                             PlayerProfile denickedProfile = nickFuture.getNow(null);
 
                             String tablistStatTemp = "";
-                            switch (Nevada.config.TabStats_TablistStat_Duels) {
+                            switch (Nevada.config.TabStats_Duels_TablistStat) {
                                 case 0: tablistStatTemp = DuelsUtil.colorWins(denickedProfile.duels.overall.wins); break;
                                 case 1: tablistStatTemp = DuelsUtil.colorWLR(denickedProfile.duels.overall.getWLR()); break;
                                 case 2: tablistStatTemp = DuelsUtil.colorWS(denickedProfile.duels.overall.winstreak); break;
@@ -132,14 +132,14 @@ public abstract class GuiPlayerTabOverlayMixin {
                             }
                             final String tablistStat = tablistStatTemp;
 
-                            if (Nevada.config.TabStats_ShowTags) {
+                            if (Nevada.config.TabStats_Duels_ShowTags) {
                                 TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
                                     if (!taglist.isEmpty()) taglist += " ";
 
-                                    cir.setReturnValue(taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                                    cir.setReturnValue(taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_Duels_ShowStat ? (" §7| " + tablistStat) : ""));
                                 });
                             } else {
-                                cir.setReturnValue(cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                                cir.setReturnValue(cir.getReturnValue() + (Nevada.config.TabStats_Duels_ShowStat ? (" §7| " + tablistStat) : ""));
                             }
 
                             if (firstDenick)
@@ -154,7 +154,7 @@ public abstract class GuiPlayerTabOverlayMixin {
                 }
 
                 String tablistStatTemp = "";
-                switch (Nevada.config.TabStats_TablistStat_Duels) {
+                switch (Nevada.config.TabStats_Duels_TablistStat) {
                     case 0: tablistStatTemp = DuelsUtil.colorWins(profile.duels.overall.wins); break;
                     case 1: tablistStatTemp = DuelsUtil.colorWLR(profile.duels.overall.getWLR()); break;
                     case 2: tablistStatTemp = DuelsUtil.colorWS(profile.duels.overall.winstreak); break;
@@ -162,14 +162,14 @@ public abstract class GuiPlayerTabOverlayMixin {
                 }
                 final String tablistStat = tablistStatTemp;
 
-                if (Nevada.config.TabStats_ShowTags) {
+                if (Nevada.config.TabStats_Duels_ShowTags) {
                     TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
                         if (!taglist.isEmpty()) taglist += " ";
 
-                        cir.setReturnValue(taglist + cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                        cir.setReturnValue(taglist + cir.getReturnValue() + (Nevada.config.TabStats_Duels_ShowStat ? (" §7| " + tablistStat) : ""));
                     });
                 } else {
-                    cir.setReturnValue(cir.getReturnValue() + (Nevada.config.TabStats_ShowStat ? (" §7| " + tablistStat) : ""));
+                    cir.setReturnValue(cir.getReturnValue() + (Nevada.config.TabStats_Duels_ShowStat ? (" §7| " + tablistStat) : ""));
                 }
             }
         }

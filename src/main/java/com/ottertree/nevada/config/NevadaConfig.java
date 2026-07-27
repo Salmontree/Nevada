@@ -14,25 +14,26 @@ import cc.polyfrost.oneconfig.config.data.OptionSize;
 
 public class NevadaConfig extends Config {
     // Tab Stats
-    @Switch(name="Enable Tab Stats", category="Tab Stats")
+    @Switch(name="Enable Tab Stats", category="Tab Stats", subcategory="General")
     public boolean TabStats_Enable = true;
-    @Switch(name="Enable Tab Stats In Lobby", category="Tab Stats")
+    @Switch(name="Enable Tab Stats In Lobby", category="Tab Stats", subcategory="General")
     public boolean TabStats_EnableInLobby = false;
 
-    @Switch(name="Show Stars", category="Tab Stats")
-    public boolean TabStats_ShowStars = true;
-    @Switch(name="Show Tags", category="Tab Stats")
-    public boolean TabStats_ShowTags = true;
-
-    @Info(text="Stat that shows up next to name in tablist", type=InfoType.INFO, category="Tab Stats")
-    private boolean TabStats_TablistStat_Info;
-    @Switch(name="Show Tablist Stat", category="Tab Stats")
-    public boolean TabStats_ShowStat = true;
-
-    @Dropdown(name="Bedwars Stat", options={"Finals", "FKDR", "Wins", "WLR", "Beds", "BBLR"}, category="Tab Stats", size=OptionSize.DUAL)
-    public int TabStats_TablistStat_Bedwars = 1; // FKDR
-    @Dropdown(name="Duels Stat", options={"Wins", "WLR", "Current Winstreak", "Best Winstreak"}, category="Tab Stats", size=OptionSize.DUAL)
-    public int TabStats_TablistStat_Duels = 1; // WLR
+    @Switch(name="Show Stars", category="Tab Stats", subcategory="Bedwars")
+    public boolean TabStats_Bedwars_ShowStars = true;
+    @Switch(name="Show Tags", category="Tab Stats", subcategory="Bedwars")
+    public boolean TabStats_Bedwars_ShowTags = true;
+    @Switch(name="Show Custom Stat", category="Tab Stats", subcategory="Bedwars")
+    public boolean TabStats_Bedwars_ShowStat = true;
+    @Dropdown(name="Custom Stat", options={"Finals", "FKDR", "Wins", "WLR", "Beds", "BBLR"}, category="Tab Stats", subcategory="Bedwars")
+    public int TabStats_Bedwars_TablistStat = 1; // FKDR
+    
+    @Switch(name="Show Tags", category="Tab Stats", subcategory="Duels")
+    public boolean TabStats_Duels_ShowTags = true;
+    @Switch(name="Show Custom Stat", category="Tab Stats", subcategory="Duels")
+    public boolean TabStats_Duels_ShowStat = true;
+    @Dropdown(name="Duels Stat", options={"Wins", "WLR", "Current Winstreak", "Best Winstreak"}, category="Tab Stats", subcategory="Duels", size=OptionSize.DUAL)
+    public int TabStats_Duels_TablistStat = 1; // WLR
 
     // API Keys
     @Text(name="Hypixel", secure=true, category="API Keys")
@@ -63,11 +64,16 @@ public class NevadaConfig extends Config {
         initialize();
 
         addDependency("TabStats_EnableInLobby", "TabStats_Enable");
-        addDependency("TabStats_ShowStars", "TabStats_Enable");
-        addDependency("TabStats_ShowTags", "TabStats_Enable");
-        addDependency("TabStats_ShowStat", "TabStats_Enable");
-        addDependency("TabStats_TablistStat", "TabStats_ShowStat");
-        addDependency("TabStats_TablistStat", "TabStats_Enable");
+        addDependency("TabStats_Bedwars_ShowStars", "TabStats_Enable");
+        addDependency("TabStats_Bedwars_ShowTags", "TabStats_Enable");
+        addDependency("TabStats_Bedwars_ShowStat", "TabStats_Enable");
+        addDependency("TabStats_Bedwars_TablistStat", "TabStats_Bedwars_ShowStat");
+        addDependency("TabStats_Bedwars_TablistStat", "TabStats_Enable");
+        addDependency("TabStats_Duels_ShowStars", "TabStats_Enable");
+        addDependency("TabStats_Duels_ShowTags", "TabStats_Enable");
+        addDependency("TabStats_Duels_ShowStat", "TabStats_Enable");
+        addDependency("TabStats_Duels_TablistStat", "TabStats_Duels_ShowStat");
+        addDependency("TabStats_Duels_TablistStat", "TabStats_Enable");
 
         addDependency("Pregame_OnlyShowOnce", "Pregame_ShowPlayerStats");
     }
