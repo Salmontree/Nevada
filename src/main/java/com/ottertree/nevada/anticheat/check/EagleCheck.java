@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.anticheat.ACPlayerData;
 
 public class EagleCheck extends Check {
@@ -28,6 +29,8 @@ public class EagleCheck extends Check {
 
     @Override
     public void runCheck(ACPlayerData player) {
+        if (!Nevada.config.Anticheat_Eagle) return;
+
         final long currentTime = System.currentTimeMillis();
 
         List<Long> shiftHistory = shiftHistories.computeIfAbsent(player.uuid, k -> new ArrayList<>());

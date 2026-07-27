@@ -45,6 +45,16 @@ public class NevadaConfig extends Config {
     @Switch(name="Only Show Once", category="Pregame")
     public boolean Pregame_OnlyShowOnce = true;
 
+    // Anticheat
+    @Switch(name="Check Autoblock", category="Anticheat")
+    public boolean Anticheat_Autoblock = true;
+    @Switch(name="Check Tower", category="Anticheat")
+    public boolean Anticheat_Tower = true;
+    @Switch(name="Check Eagle", category="Anticheat")
+    public boolean Anticheat_Eagle = true;
+    @Switch(name="Check Scaffold", category="Anticheat")
+    public boolean Anticheat_Scaffold = true;
+
     public NevadaConfig() {
         super(new Mod(Nevada.NAME, ModType.HYPIXEL), Nevada.MODID + ".json");
         initialize();

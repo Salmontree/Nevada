@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.anticheat.ACPlayerData;
 
 public class TowerCheck extends Check {
@@ -48,6 +49,8 @@ public class TowerCheck extends Check {
 
     @Override
     public void runCheck(ACPlayerData player) {
+        if (!Nevada.config.Anticheat_Tower) return;
+
         final long currentTime = System.currentTimeMillis();
         final double verticalSpeed = player.motionY;
         final double horizontalSpeed = Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ);

@@ -1,5 +1,6 @@
 package com.ottertree.nevada.anticheat.check;
 
+import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.anticheat.ACPlayerData;
 
 public class ScaffoldCheck extends Check {
@@ -14,6 +15,8 @@ public class ScaffoldCheck extends Check {
 
     @Override
     public void runCheck(ACPlayerData player) {
+        if (!Nevada.config.Anticheat_Scaffold) return;
+
         final double horizontalSpeed = Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ);
 
         final boolean isLikelyDead = player.posY > DEAD_Y_THRESHOLD;

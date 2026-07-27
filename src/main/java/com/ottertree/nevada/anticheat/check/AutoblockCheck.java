@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.anticheat.ACPlayerData;
 
 public class AutoblockCheck extends Check {
@@ -37,6 +38,8 @@ public class AutoblockCheck extends Check {
 
     @Override
     public void runCheck(ACPlayerData player) {
+        if (!Nevada.config.Anticheat_Autoblock) return;
+
         final long currentTime = System.currentTimeMillis();
         final boolean isHoldingSword = player.isHoldingSword;
         final boolean isSwinging = player.swingProgress > 0;
