@@ -10,6 +10,8 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
 @Command(value="gexp", description="/gexp [username] [daily|weekly|monthly]", customHelpMessage={ChatUtil.PREFIX + "§8/§7gexp§8: Get player's earned guild exp.", ChatUtil.INDENT + "§8Usage: /§7gexp §8[username] [daily|weekly|monthly]"})
 public class GexpCommand {
+    private static final java.text.NumberFormat COMMA_FORMAT = java.text.NumberFormat.getNumberInstance(java.util.Locale.US);
+
     @Main
     private void handle() {
         handle(PlayerUtil.getPlayerName(), "weekly");
@@ -35,7 +37,7 @@ public class GexpCommand {
 
             Urchin.INSTANCE.getPlayerGexp(user, period).thenAccept(gexp -> {
                 Hypixel.INSTANCE.getPlayerProfileFromName(user).thenAccept(profile -> {
-                    ChatUtil.send(ChatUtil.INDENT + "§7" + profile.hypixel.displayName + " §8collected §7" + gexp + " §8" + period + " gexp");
+                    ChatUtil.send(ChatUtil.INDENT + "§7" + profile.hypixel.displayName + " §8collected §7" + COMMA_FORMAT.format(gexp) + " §8" + period + " gexp");
                 });
             });
         });

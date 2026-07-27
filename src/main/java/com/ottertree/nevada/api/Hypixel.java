@@ -108,7 +108,28 @@ public class Hypixel {
             if (stats.has("losses_bedwars")) profile.bedwars.losses = stats.get("losses_bedwars").getAsInt();
             if (stats.has("beds_broken_bedwars")) profile.bedwars.bedsBroken = stats.get("beds_broken_bedwars").getAsInt();
             if (stats.has("beds_lost_bedwars")) profile.bedwars.bedsLost = stats.get("beds_lost_bedwars").getAsInt();
-            profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
+            if (player.getObjectProperty("achievements").has("bedwars_level")) profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
+        }
+
+        // Duels stats
+        if (player.getObjectProperty("stats").getAsJsonObject().has("Duels")) {
+            JsonObject stats = player.getObjectProperty("stats").get("Duels").getAsJsonObject();
+            if (stats.has("wins")) profile.duels.overall.wins = stats.get("wins").getAsInt();
+            if (stats.has("losses")) profile.duels.overall.losses = stats.get("losses").getAsInt();
+            if (stats.has("current_winstreak")) profile.duels.overall.winstreak = stats.get("current_winstreak").getAsInt();
+            if (stats.has("best_winstreak")) profile.duels.overall.best_winstreak = stats.get("best_winstreak").getAsInt();
+        }
+        if (player.getObjectProperty("stats").getAsJsonObject().has("Duels")) {
+            JsonObject stats = player.getObjectProperty("stats").get("Duels").getAsJsonObject();
+            if (stats.has("bridge_duel_wins")) profile.duels.bridge.wins += stats.get("bridge_duel_wins").getAsInt();
+            if (stats.has("bridge_doubles_wins")) profile.duels.bridge.wins += stats.get("bridge_doubles_wins").getAsInt();
+            if (stats.has("bridge_threes_wins")) profile.duels.bridge.wins += stats.get("bridge_threes_wins").getAsInt();
+            if (stats.has("bridge_four_wins")) profile.duels.bridge.wins += stats.get("bridge_four_wins").getAsInt();
+            if (stats.has("bridge_duel_losses")) profile.duels.bridge.losses += stats.get("bridge_duel_losses").getAsInt();
+            if (stats.has("bridge_doubles_losses")) profile.duels.bridge.losses += stats.get("bridge_doubles_losses").getAsInt();
+            if (stats.has("bridge_threes_losses")) profile.duels.bridge.losses += stats.get("bridge_threes_losses").getAsInt();
+            if (stats.has("bridge_four_losses")) profile.duels.bridge.losses += stats.get("bridge_four_losses").getAsInt();
+            if (stats.has("best_bridge_winstreak")) profile.duels.bridge.best_winstreak = stats.get("best_bridge_winstreak").getAsInt();
         }
 
         // Build Battle stats
