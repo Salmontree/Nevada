@@ -9,7 +9,7 @@ import com.ottertree.nevada.command.PlayCommand;
 import com.ottertree.nevada.command.StatCheckCommand;
 import com.ottertree.nevada.command.ViewCommand;
 import com.ottertree.nevada.config.NevadaConfig;
-import com.ottertree.nevada.event.BlockPlacedEvent;
+import com.ottertree.nevada.event.InteractEvent;
 import com.ottertree.nevada.event.ChatReceivedEvent;
 import com.ottertree.nevada.event.WorldLoadEvent;
 
@@ -31,7 +31,7 @@ public class Nevada {
         config = new NevadaConfig();
         ACManager.INSTANCE.initialize();
 
-        MinecraftForge.EVENT_BUS.register(new BlockPlacedEvent());
+        MinecraftForge.EVENT_BUS.register(new InteractEvent());
         MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
         MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
 

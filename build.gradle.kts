@@ -184,15 +184,10 @@ tasks {
 
         relocate("com.google.gson", "com.ottertree.nevada.shaded.gson")
         relocate("org.apache.http", "com.ottertree.nevada.shaded.apachehttp")
-    }
 
-    remapJar {
-        inputFile.set(shadowJar.get().archiveFile)
-        archiveClassifier.set("")
-    }
-
-    jar {
-        // Sets the jar manifest attributes.
+        // Sets the jar manifest attributes. This MUST live on shadowJar (not the disabled
+        // `jar` task below) since shadowJar's output is what remapJar actually ships -
+        // manifest attributes set on a disabled task never make it into the built mod jar.
         if (platform.isLegacyForge) {
             manifest.attributes += mapOf(
                 "ModSide" to "CLIENT", // We aren't developing a server-side mod
@@ -202,6 +197,15 @@ tasks {
                 "TweakClass" to "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker" // Loads the OneConfig launch wrapper.
             )
         }
+    }
+
+    remapJar {
+        inputFile.set(shadowJar.get().archiveFile)
+        archiveClassifier.set("")
+    }
+
+    jar {
+        // Disabled - shadowJar/remapJar produce the actual shipped jar instead.
         dependsOn(shadowJar)
         archiveClassifier.set("")
         enabled = false
