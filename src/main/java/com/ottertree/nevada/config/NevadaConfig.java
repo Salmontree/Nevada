@@ -44,6 +44,8 @@ public class NevadaConfig extends Config {
     // Bedwars
     @Switch(name="Anti-Obby Misplace", category="Bedwars", subcategory="Bed Defense")
     public boolean Bedwars_AntiObbyMisplace = false;
+    @Switch(name="Only Enable Anti-Obby Misplace in Bedwars", category="Bedwars", subcategory="Bed Defense")
+    public boolean Bedwars_AntiObbyMisplace_OnlyInBedwars = true;
 
     // Pregame
     @Switch(name="Auto-show Player Stats in Pregame", category="Pregame")
@@ -76,6 +78,8 @@ public class NevadaConfig extends Config {
         addDependency("TabStats_Duels_ShowStat", "TabStats_Enable");
         addDependency("TabStats_Duels_TablistStat", "TabStats_Duels_ShowStat");
         addDependency("TabStats_Duels_TablistStat", "TabStats_Enable");
+
+        addDependency("Bedwars_AntiObbyMisplace_OnlyInBedwars", "Bedwars_AntiObbyMisplace");
 
         addDependency("Pregame_OnlyShowOnce", "Pregame_ShowPlayerStats");
     }

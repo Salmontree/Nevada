@@ -1,6 +1,7 @@
 package com.ottertree.nevada.event;
 
 import com.ottertree.nevada.Nevada;
+import com.ottertree.nevada.util.BedwarsUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -16,7 +17,7 @@ public class BlockPlacedEvent {
     }
 
     private void antiObsidianMisplace(BlockEvent.PlaceEvent e) {
-        if (!Nevada.config.Bedwars_AntiObbyMisplace) return;
+        if (!Nevada.config.Bedwars_AntiObbyMisplace || !BedwarsUtil.inBedwars()) return;
         Block placed = e.placedBlock.getBlock();
         if (placed != Blocks.obsidian) return;
 
