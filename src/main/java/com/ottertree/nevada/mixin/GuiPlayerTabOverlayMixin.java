@@ -30,10 +30,9 @@ public abstract class GuiPlayerTabOverlayMixin {
 
         if (nwProfile == null || nwProfile.getName() == null || nwProfile.getId() == null) return;
         if (!HypixelUtils.INSTANCE.isHypixel()) return;
-        if (!Nevada.config.TabStats_Enable) return;
 
         if (BedwarsUtil.inBedwars()) {
-            if (!Nevada.config.TabStats_EnableInLobby && BedwarsUtil.inLobby()) return;
+            if (!Nevada.config.TabStats_Bedwars_Enable || (!Nevada.config.TabStats_Bedwars_EnableInLobby && BedwarsUtil.inLobby())) return;
 
             CompletableFuture<PlayerProfile> future = Hypixel.INSTANCE.getPlayerProfileFromUUID(nwProfile.getId().toString());
 
@@ -106,7 +105,7 @@ public abstract class GuiPlayerTabOverlayMixin {
         }
 
         if (DuelsUtil.inDuels()) {
-            if (!Nevada.config.TabStats_EnableInLobby && DuelsUtil.inLobby()) return;
+            if (!Nevada.config.TabStats_Duels_Enable || (!Nevada.config.TabStats_Duels_EnableInLobby && DuelsUtil.inLobby())) return;
 
             CompletableFuture<PlayerProfile> future = Hypixel.INSTANCE.getPlayerProfileFromUUID(nwProfile.getId().toString());
 

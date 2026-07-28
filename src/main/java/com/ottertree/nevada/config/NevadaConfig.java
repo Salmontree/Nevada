@@ -11,26 +11,35 @@ import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.data.OptionSize;
 
 public class NevadaConfig extends Config {
-    // Tab Stats
-    @Switch(name="Enable Tab Stats", category="Tab Stats", subcategory="General")
-    public boolean TabStats_Enable = true;
-    @Switch(name="Enable Tab Stats In Lobby", category="Tab Stats", subcategory="General")
-    public boolean TabStats_EnableInLobby = false;
+    // Bedwars
+    @Switch(name="Anti-Obby Misplace", category="Bedwars", subcategory="Bed Defense")
+    public boolean Bedwars_AntiObbyMisplace = false;
+    @Switch(name="Only Enable Anti-Obby Misplace in Bedwars", category="Bedwars", subcategory="Bed Defense")
+    public boolean Bedwars_AntiObbyMisplace_OnlyInBedwars = true;
 
-    @Switch(name="Show Stars", category="Tab Stats", subcategory="Bedwars")
+    @Switch(name="Enable Tab Stats", category="Bedwars", subcategory="Tab Stats")
+    public boolean TabStats_Bedwars_Enable = true;
+    @Switch(name="Enable Tab Stats In Lobby", category="Bedwars", subcategory="Tab Stats")
+    public boolean TabStats_Bedwars_EnableInLobby = false;
+    @Switch(name="Show Stars", category="Bedwars", subcategory="Tab Stats")
     public boolean TabStats_Bedwars_ShowStars = true;
-    @Switch(name="Show Tags", category="Tab Stats", subcategory="Bedwars")
+    @Switch(name="Show Tags", category="Bedwars", subcategory="Tab Stats")
     public boolean TabStats_Bedwars_ShowTags = true;
-    @Switch(name="Show Custom Stat", category="Tab Stats", subcategory="Bedwars")
+    @Switch(name="Show Custom Stat", category="Bedwars", subcategory="Tab Stats")
     public boolean TabStats_Bedwars_ShowStat = true;
-    @Dropdown(name="Custom Stat", options={"Finals", "FKDR", "Wins", "WLR", "Beds", "BBLR"}, category="Tab Stats", subcategory="Bedwars")
+    @Dropdown(name="Custom Stat", options={"Finals", "FKDR", "Wins", "WLR", "Beds", "BBLR"}, category="Bedwars", subcategory="Tab Stats")
     public int TabStats_Bedwars_TablistStat = 1; // FKDR
-    
-    @Switch(name="Show Tags", category="Tab Stats", subcategory="Duels")
+
+    // Duels
+    @Switch(name="Enable Tab Stats", category="Duels", subcategory="Tab Stats")
+    public boolean TabStats_Duels_Enable = true;
+    @Switch(name="Enable Tab Stats In Lobby", category="Duels", subcategory="Tab Stats")
+    public boolean TabStats_Duels_EnableInLobby = false;
+    @Switch(name="Show Tags", category="Duels", subcategory="Tab Stats")
     public boolean TabStats_Duels_ShowTags = true;
-    @Switch(name="Show Custom Stat", category="Tab Stats", subcategory="Duels")
+    @Switch(name="Show Custom Stat", category="Duels", subcategory="Tab Stats")
     public boolean TabStats_Duels_ShowStat = true;
-    @Dropdown(name="Duels Stat", options={"Wins", "WLR", "Current Winstreak", "Best Winstreak"}, category="Tab Stats", subcategory="Duels", size=OptionSize.DUAL)
+    @Dropdown(name="Duels Stat", options={"Wins", "WLR", "Current Winstreak", "Best Winstreak"}, category="Duels", subcategory="Tab Stats", size=OptionSize.DUAL)
     public int TabStats_Duels_TablistStat = 1; // WLR
 
     // API Keys
@@ -40,12 +49,6 @@ public class NevadaConfig extends Config {
     public String APIKeys_Urchin;
     @Text(name="Aurora", secure=true, category="API Keys")
     public String APIKeys_Aurora;
-
-    // Bedwars
-    @Switch(name="Anti-Obby Misplace", category="Bedwars", subcategory="Bed Defense")
-    public boolean Bedwars_AntiObbyMisplace = false;
-    @Switch(name="Only Enable Anti-Obby Misplace in Bedwars", category="Bedwars", subcategory="Bed Defense")
-    public boolean Bedwars_AntiObbyMisplace_OnlyInBedwars = true;
 
     // Pregame
     @Switch(name="Auto-show Player Stats in Pregame", category="Pregame")
@@ -67,17 +70,18 @@ public class NevadaConfig extends Config {
         super(new Mod(Nevada.NAME, ModType.HYPIXEL), Nevada.MODID + ".json");
         initialize();
 
-        addDependency("TabStats_EnableInLobby", "TabStats_Enable");
-        addDependency("TabStats_Bedwars_ShowStars", "TabStats_Enable");
-        addDependency("TabStats_Bedwars_ShowTags", "TabStats_Enable");
-        addDependency("TabStats_Bedwars_ShowStat", "TabStats_Enable");
+        addDependency("TabStats_Bedwars_EnableInLobby", "TabStats_Bedwars_Enable");
+        addDependency("TabStats_Bedwars_ShowStars", "TabStats_Bedwars_Enable");
+        addDependency("TabStats_Bedwars_ShowTags", "TabStats_Bedwars_Enable");
+        addDependency("TabStats_Bedwars_ShowStat", "TabStats_Bedwars_Enable");
         addDependency("TabStats_Bedwars_TablistStat", "TabStats_Bedwars_ShowStat");
-        addDependency("TabStats_Bedwars_TablistStat", "TabStats_Enable");
-        addDependency("TabStats_Duels_ShowStars", "TabStats_Enable");
-        addDependency("TabStats_Duels_ShowTags", "TabStats_Enable");
-        addDependency("TabStats_Duels_ShowStat", "TabStats_Enable");
+        addDependency("TabStats_Bedwars_TablistStat", "TabStats_Bedwars_Enable");
+        addDependency("TabStats_Duels_EnableInLobby", "TabStats_Duels_Enable");
+        addDependency("TabStats_Duels_ShowStars", "TabStats_Duels_Enable");
+        addDependency("TabStats_Duels_ShowTags", "TabStats_Duels_Enable");
+        addDependency("TabStats_Duels_ShowStat", "TabStats_Duels_Enable");
         addDependency("TabStats_Duels_TablistStat", "TabStats_Duels_ShowStat");
-        addDependency("TabStats_Duels_TablistStat", "TabStats_Enable");
+        addDependency("TabStats_Duels_TablistStat", "TabStats_Duels_Enable");
 
         addDependency("Bedwars_AntiObbyMisplace_OnlyInBedwars", "Bedwars_AntiObbyMisplace");
 
