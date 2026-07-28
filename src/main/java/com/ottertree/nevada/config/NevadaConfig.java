@@ -41,6 +41,10 @@ public class NevadaConfig extends Config {
     @Text(name="Aurora", secure=true, category="API Keys")
     public String APIKeys_Aurora;
 
+    // Bedwars
+    @Switch(name="Anti-Obby Misplace", category="Bedwars", subcategory="Bed Defense")
+    public boolean Bedwars_AntiObbyMisplace = false;
+
     // Pregame
     @Switch(name="Auto-show Player Stats in Pregame", category="Pregame")
     public boolean Pregame_ShowPlayerStats = true;
