@@ -12,6 +12,13 @@ public class PlayerProfile {
         public float getFKDR() { return finalDeaths != 0 ? (float)finalKills / finalDeaths : finalKills; }
         public float getWLR() { return losses != 0 ? (float)wins / losses : wins; }
         public float getBBLR() { return bedsLost != 0 ? (float)bedsBroken / bedsLost : bedsBroken; }
+        public String displayLevel;
+        public String displayFinals;
+        public String displayWins;
+        public String displayBeds;
+        public String displayFKDR;
+        public String displayWLR;
+        public String displayBBLR;
     }
     public Bedwars bedwars = new Bedwars();
 

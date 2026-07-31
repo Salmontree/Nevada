@@ -51,12 +51,12 @@ public abstract class GuiPlayerTabOverlayMixin {
 
                             String tablistStatTemp = "";
                             switch (Nevada.config.TabStats_Bedwars_TablistStat) {
-                                case 0: tablistStatTemp = BedwarsUtil.colorFinals(denickedProfile.bedwars.finalKills); break;
-                                case 1: tablistStatTemp = BedwarsUtil.colorFKDR(denickedProfile.bedwars.getFKDR()); break;
-                                case 2: tablistStatTemp = BedwarsUtil.colorWins(denickedProfile.bedwars.wins); break;
-                                case 3: tablistStatTemp = BedwarsUtil.colorWLR(denickedProfile.bedwars.getWLR()); break;
-                                case 4: tablistStatTemp = BedwarsUtil.colorBedsBroken(denickedProfile.bedwars.bedsBroken); break;
-                                case 5: tablistStatTemp = BedwarsUtil.colorBBLR(denickedProfile.bedwars.getBBLR()); break;
+                                case 0: tablistStatTemp = profile.bedwars.displayFinals; break;
+                                case 1: tablistStatTemp = profile.bedwars.displayFKDR; break;
+                                case 2: tablistStatTemp = profile.bedwars.displayWins; break;
+                                case 3: tablistStatTemp = profile.bedwars.displayWLR; break;
+                                case 4: tablistStatTemp = profile.bedwars.displayBeds; break;
+                                case 5: tablistStatTemp = profile.bedwars.displayBBLR; break;
                             }
                             final String tablistStat = tablistStatTemp;
 
@@ -64,10 +64,10 @@ public abstract class GuiPlayerTabOverlayMixin {
                                 TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
                                     if (!taglist.isEmpty()) taglist += " ";
 
-                                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(denickedProfile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (profile.bedwars.displayLevel + " ") : "") + taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                                 });
                             } else {
-                                cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                                cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (profile.bedwars.displayLevel + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                             }
 
                             if (firstDenick)
@@ -83,12 +83,12 @@ public abstract class GuiPlayerTabOverlayMixin {
 
                 String tablistStatTemp = "";
                 switch (Nevada.config.TabStats_Bedwars_TablistStat) {
-                    case 0: tablistStatTemp = BedwarsUtil.colorFinals(profile.bedwars.finalKills); break;
-                    case 1: tablistStatTemp = BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()); break;
-                    case 2: tablistStatTemp = BedwarsUtil.colorWins(profile.bedwars.wins); break;
-                    case 3: tablistStatTemp = BedwarsUtil.colorWLR(profile.bedwars.getWLR()); break;
-                    case 4: tablistStatTemp = BedwarsUtil.colorBedsBroken(profile.bedwars.bedsBroken); break;
-                    case 5: tablistStatTemp = BedwarsUtil.colorBBLR(profile.bedwars.getBBLR()); break;
+                    case 0: tablistStatTemp = profile.bedwars.displayFinals; break;
+                    case 1: tablistStatTemp = profile.bedwars.displayFKDR; break;
+                    case 2: tablistStatTemp = profile.bedwars.displayWins; break;
+                    case 3: tablistStatTemp = profile.bedwars.displayWLR; break;
+                    case 4: tablistStatTemp = profile.bedwars.displayBeds; break;
+                    case 5: tablistStatTemp = profile.bedwars.displayBBLR; break;
                 }
                 final String tablistStat = tablistStatTemp;
 
@@ -96,10 +96,10 @@ public abstract class GuiPlayerTabOverlayMixin {
                     TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
                         if (!taglist.isEmpty()) taglist += " ";
 
-                        cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + taglist + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                        cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (profile.bedwars.displayLevel + " ") : "") + taglist + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                     });
                 } else {
-                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (BedwarsUtil.formatLevel(profile.bedwars.level) + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (profile.bedwars.displayLevel + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
                 }
             }
         }

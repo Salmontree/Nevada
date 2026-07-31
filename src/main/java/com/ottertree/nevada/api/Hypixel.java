@@ -14,6 +14,7 @@ import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.cache.PlayerProfileCache;
 import com.ottertree.nevada.data.NevadaException;
 import com.ottertree.nevada.data.PlayerProfile;
+import com.ottertree.nevada.util.BedwarsUtil;
 import com.ottertree.nevada.util.PlayerUtil;
 
 import net.hypixel.api.HypixelAPI;
@@ -139,6 +140,13 @@ public class Hypixel {
             if (stats.has("beds_lost_bedwars")) profile.bedwars.bedsLost = stats.get("beds_lost_bedwars").getAsInt();
             if (player.getObjectProperty("achievements").has("bedwars_level")) profile.bedwars.level = player.getObjectProperty("achievements").get("bedwars_level").getAsInt();
         }
+        profile.bedwars.displayLevel = BedwarsUtil.formatLevel(profile.bedwars.level);
+        profile.bedwars.displayFinals = BedwarsUtil.colorFinals(profile.bedwars.finalKills);
+        profile.bedwars.displayWins = BedwarsUtil.colorWins(profile.bedwars.wins);
+        profile.bedwars.displayBeds = BedwarsUtil.colorBedsBroken(profile.bedwars.bedsBroken);
+        profile.bedwars.displayFKDR = BedwarsUtil.colorFKDR(profile.bedwars.getFKDR());
+        profile.bedwars.displayWLR = BedwarsUtil.colorWLR(profile.bedwars.getWLR());
+        profile.bedwars.displayBBLR = BedwarsUtil.colorBBLR(profile.bedwars.getBBLR());
 
         // Duels stats
         if (player.getObjectProperty("stats").getAsJsonObject().has("Duels")) {
