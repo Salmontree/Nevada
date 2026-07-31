@@ -250,7 +250,7 @@ public class SkinUtil {
 
     public static String skinDenick(String nick) {
         String cachedNick = PlayerNickCache.INSTANCE.getNick(nick);
-        if (cachedNick != null) return cachedNick;
+        if (cachedNick != null && !cachedNick.isEmpty()) return cachedNick;
 
         NetworkPlayerInfo playerInfo = null;
 
@@ -264,7 +264,7 @@ public class SkinUtil {
         }
 
         if (playerInfo == null) {
-            PlayerNickCache.INSTANCE.cacheNick(nick, null);
+            PlayerNickCache.INSTANCE.cacheNick(nick, "");
             return null;
         }
 
