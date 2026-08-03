@@ -1,6 +1,7 @@
 package com.ottertree.nevada;
 
 import com.ottertree.nevada.anticheat.ACManager;
+import com.ottertree.nevada.command.BedwarsCommand;
 import com.ottertree.nevada.command.ClearCacheCommand;
 import com.ottertree.nevada.command.DebugCommand;
 import com.ottertree.nevada.command.DenickCommand;
@@ -35,6 +36,7 @@ public class Nevada {
         MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
         MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
 
+        CommandManager.register(new BedwarsCommand());
         CommandManager.register(new ClearCacheCommand());
         CommandManager.register(new DebugCommand());
         CommandManager.register(new DenickCommand());

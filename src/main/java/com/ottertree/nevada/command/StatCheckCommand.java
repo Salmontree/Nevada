@@ -18,7 +18,7 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 @Command(value="statcheck", description="/statcheck <username> <mode>", aliases={"sc", "stats"}, customHelpMessage={ChatUtil.PREFIX + "§7/§fstatcheck§7: Check Hypixel stats for any player.", ChatUtil.INDENT + "§7Usage: /§fstatcheck§7 <username> <mode>", ChatUtil.INDENT + "§7Aliases: /§fstats§7, /§fsc", ChatUtil.INDENT + "§7Gamemodes: §fbw§7, §fduels§7, §fbridge§7, §fbb"})
 public class StatCheckCommand {
     @Main
-    private void handle(String username, @Greedy String gameName) {
+    public void handle(String username, @Greedy String gameName) {
         ChatUtil.send(ChatUtil.PREFIX + "§7Fetching §f" + username + "§7's stats...");
 
         final String game = gameName.toLowerCase();

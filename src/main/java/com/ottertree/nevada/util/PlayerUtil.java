@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import com.ottertree.nevada.api.Mojang;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 
 public class PlayerUtil {
     public static String getPlayerName() {
@@ -17,5 +18,9 @@ public class PlayerUtil {
 
     public static CompletableFuture<Boolean> playerExists(String name) {
         return Mojang.playerExists(name);
+    }
+
+    public static EntityPlayerSP getPlayer() {
+        return Minecraft.getMinecraft().thePlayer;
     }
 }
