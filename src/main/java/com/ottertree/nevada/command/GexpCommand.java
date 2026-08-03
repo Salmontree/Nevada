@@ -10,7 +10,7 @@ import com.ottertree.nevada.util.PlayerUtil;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="gexp", description="/gexp [username] [daily|weekly|monthly]", customHelpMessage={ChatUtil.PREFIX + "§8/§7gexp§8: Get player's earned guild exp.", ChatUtil.INDENT + "§8Usage: /§7gexp §8[username] [daily|weekly|monthly]"})
+@Command(value="gexp", description="/gexp [username] [daily|weekly|monthly]", customHelpMessage={ChatUtil.PREFIX + "§7/§fgexp§7: Get player's earned guild exp.", ChatUtil.INDENT + "§7Usage: /§fgexp §7[username] [daily|weekly|monthly]"})
 public class GexpCommand {
     private static final java.text.NumberFormat COMMA_FORMAT = java.text.NumberFormat.getNumberInstance(java.util.Locale.US);
 
@@ -31,23 +31,23 @@ public class GexpCommand {
         
         PlayerUtil.playerExists(user).thenAccept(exists -> {
             if (!exists) {
-                ChatUtil.send(ChatUtil.PREFIX + "§8Player not found");
+                ChatUtil.send(ChatUtil.PREFIX + "§7Player not found");
                 return;
             }
 
-            ChatUtil.send(ChatUtil.PREFIX + "§8Fetching §7" + user + "§8's " + period + " gexp...");
+            ChatUtil.send(ChatUtil.PREFIX + "§7Fetching §f" + user + "§7's " + period + " gexp...");
 
             Urchin.INSTANCE.getPlayerGexp(user, period).thenAccept(gexp -> {
                 Hypixel.INSTANCE.getPlayerProfileFromName(user).thenAccept(profile -> {
-                    ChatUtil.send(ChatUtil.INDENT + "§7" + profile.hypixel.displayName + " §8collected §7" + COMMA_FORMAT.format(gexp) + " §8" + period + " gexp");
+                    ChatUtil.send(ChatUtil.INDENT + "§f" + profile.hypixel.displayName + " §7collected §f" + COMMA_FORMAT.format(gexp) + " §7" + period + " gexp");
                 });
             }).exceptionally(e -> {
                 if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
-                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    ChatUtil.send(ChatUtil.PREFIX + "§7" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
                     return null;
                 }
 
-                ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't lookup player stats");
+                ChatUtil.send(ChatUtil.PREFIX + "§7Couldn't lookup player stats");
                 e.printStackTrace();
                 return null;
             });

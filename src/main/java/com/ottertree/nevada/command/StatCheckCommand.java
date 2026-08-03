@@ -15,26 +15,26 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Greedy;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="statcheck", description="/statcheck <username> <mode>", aliases={"sc", "stats"}, customHelpMessage={ChatUtil.PREFIX + "§8/§7statcheck§8: Check Hypixel stats for any player.", ChatUtil.INDENT + "§8Usage: /§7statcheck§8 <username> <mode>", ChatUtil.INDENT + "§8Aliases: /§7stats§8, /§7sc", ChatUtil.INDENT + "§8Gamemodes: §7bw§8, §7duels§8, §7bridge§8, §7bb"})
+@Command(value="statcheck", description="/statcheck <username> <mode>", aliases={"sc", "stats"}, customHelpMessage={ChatUtil.PREFIX + "§7/§fstatcheck§7: Check Hypixel stats for any player.", ChatUtil.INDENT + "§7Usage: /§fstatcheck§7 <username> <mode>", ChatUtil.INDENT + "§7Aliases: /§fstats§7, /§fsc", ChatUtil.INDENT + "§7Gamemodes: §fbw§7, §fduels§7, §fbridge§7, §fbb"})
 public class StatCheckCommand {
     @Main
     private void handle(String username, @Greedy String gameName) {
-        ChatUtil.send(ChatUtil.PREFIX + "§8Fetching §7" + username + "§8's stats...");
+        ChatUtil.send(ChatUtil.PREFIX + "§7Fetching §7" + username + "§7's stats...");
 
         final String game = gameName.toLowerCase();
         switch (game) {
-            case "bw": break; case "bb": break; case "duels": break; case "bridge": break; default: { ChatUtil.send(ChatUtil.PREFIX + "§8Invalid game (options include bw, bb, duels, bridge)"); return; }
+            case "bw": break; case "bb": break; case "duels": break; case "bridge": break; default: { ChatUtil.send(ChatUtil.PREFIX + "§7Invalid game (expected bw, bb, duels, bridge)"); return; }
         }
 
         PlayerUtil.playerExists(username).thenAccept(exists -> {
             if (!exists) {
-                ChatUtil.send(ChatUtil.PREFIX + "§8Player not found");
+                ChatUtil.send(ChatUtil.PREFIX + "§7Player not found");
                 return;
             }
 
             Hypixel.INSTANCE.getPlayerProfileFromName(username).thenAccept(profile -> {
                 if (profile.hypixel.isNick) {
-                    ChatUtil.send(ChatUtil.PREFIX + "§8Player not found");
+                    ChatUtil.send(ChatUtil.PREFIX + "§7Player not found");
                     return;
                 }
                 
@@ -58,21 +58,21 @@ public class StatCheckCommand {
                 });
             }).exceptionally(e -> {
                 if ((e instanceof CompletionException ? e.getCause() : e) instanceof NevadaException) {
-                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    ChatUtil.send(ChatUtil.PREFIX + "§7" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
                     return null;
                 }
 
-                ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't fetch player stats");
+                ChatUtil.send(ChatUtil.PREFIX + "§7Couldn't fetch player stats");
                 e.printStackTrace();
                 return null;
             });
         }).exceptionally(e -> {
             if ((e instanceof CompletionException ? e.getCause() : e) instanceof NevadaException) {
-                ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                ChatUtil.send(ChatUtil.PREFIX + "§7" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
                 return null;
             }
             
-            ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't fetch player stats");
+            ChatUtil.send(ChatUtil.PREFIX + "§7Couldn't fetch player stats");
             e.printStackTrace();
             return null;
         });

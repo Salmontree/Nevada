@@ -10,7 +10,7 @@ import com.ottertree.nevada.util.SkinUtil;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="denick", description="/denick <skin|finals|beds> <value>", aliases={"dn"}, customHelpMessage={ChatUtil.PREFIX + "§8/§7denick§8: Denick players via. their skin, finals, or beds.", ChatUtil.INDENT + "§8Usage: /§7denick§8 <skin|finals|beds> <value>", ChatUtil.INDENT + "§8Aliases: /§7dn"})
+@Command(value="denick", description="/denick <skin|finals|beds> <value>", aliases={"dn"}, customHelpMessage={ChatUtil.PREFIX + "§7/§fdenick§7: Denick players via. their skin, finals, or beds.", ChatUtil.INDENT + "§7Usage: /§fdenick§7 <skin|finals|beds> <value>", ChatUtil.INDENT + "§7Aliases: /§fdn"})
 public class DenickCommand {
     @Main
     private void handle(String key, String value) {
@@ -21,14 +21,14 @@ public class DenickCommand {
                 case "beds": denickBeds(Integer.valueOf(value)); return;
             }
         } catch (NumberFormatException e) {
-            ChatUtil.send(ChatUtil.PREFIX + "§8'" + key + "' must be an integer");
+            ChatUtil.send(ChatUtil.PREFIX + "§7'" + key + "' must be an integer");
             return;
         }
 
-        ChatUtil.send(ChatUtil.PREFIX + "§8Invalid usage: use /denick <skin|finals|beds> <value>");
+        ChatUtil.send(ChatUtil.PREFIX + "§7Invalid usage: use /denick <skin|finals|beds> <value>");
     }
     private void denickSkin(String name) {
-        ChatUtil.send(ChatUtil.PREFIX + "§8Denicking §7" + name + "§8...");
+        ChatUtil.send(ChatUtil.PREFIX + "§7Denicking §f" + name + "§7...");
 
         String realName = SkinUtil.skinDenick(name);
 
@@ -37,61 +37,61 @@ public class DenickCommand {
                 ChatUtil.send(ChatUtil.INDENT + "§aPlayer denicked as " + profile.hypixel.displayName + "§a!");
             }).exceptionally(e -> {
                 if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
-                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    ChatUtil.send(ChatUtil.PREFIX + "§7" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
                     return null;
                 }
 
-                ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick " + name);
+                ChatUtil.send(ChatUtil.PREFIX + "§7Could not denick " + name);
                 e.printStackTrace();
                 return null;
             });
         else
-            ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick " + name);
+            ChatUtil.send(ChatUtil.PREFIX + "§7Could not denick " + name);
     }
 
     private void denickFinals(int finals) {
-        ChatUtil.send(ChatUtil.PREFIX + "§8Searching for players...");
+        ChatUtil.send(ChatUtil.PREFIX + "§7Searching for players...");
 
         Aurora.INSTANCE.denickFinals(finals).thenAccept(responses -> {
             if (responses.isEmpty()) {
-                ChatUtil.send(ChatUtil.INDENT + "§8No players found");
+                ChatUtil.send(ChatUtil.INDENT + "§7No players found");
                 return;
             }
             
             responses.forEach(response -> {
-                ChatUtil.send(ChatUtil.INDENT + "§8Found player: §7" + response.name + " §8(" + response.distance + ")");
+                ChatUtil.send(ChatUtil.INDENT + "§7Found player: §f" + response.name + " §7(" + response.distance + ")");
             });
         }).exceptionally(e -> {
             if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
-                ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                ChatUtil.send(ChatUtil.PREFIX + "§7" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
                 return null;
             }
 
-            ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick player");
+            ChatUtil.send(ChatUtil.PREFIX + "§7Could not denick player");
             e.printStackTrace();
             return null;
         });
     }
 
     private void denickBeds(int beds) {
-        ChatUtil.send(ChatUtil.PREFIX + "§8Searching for players...");
+        ChatUtil.send(ChatUtil.PREFIX + "§7Searching for players...");
         
         Aurora.INSTANCE.denickBeds(beds).thenAccept(responses -> {
             if (responses.isEmpty()) {
-                ChatUtil.send(ChatUtil.INDENT + "§8No players found");
+                ChatUtil.send(ChatUtil.INDENT + "§7No players found");
                 return;
             }
 
             responses.forEach(response -> {
-                ChatUtil.send(ChatUtil.INDENT + "§8Found player: §7" + response.name + " §8(" + response.distance + ")");
+                ChatUtil.send(ChatUtil.INDENT + "§7Found player: §f" + response.name + " §7(" + response.distance + ")");
             });
         }).exceptionally(e -> {
             if ((e instanceof CompletionException ? e.getCause() : e) instanceof Error) {
-                ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                ChatUtil.send(ChatUtil.PREFIX + "§7" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
                 return null;
             }
 
-            ChatUtil.send(ChatUtil.PREFIX + "§8Could not denick player");
+            ChatUtil.send(ChatUtil.PREFIX + "§7Could not denick player");
             e.printStackTrace();
             return null;
         });

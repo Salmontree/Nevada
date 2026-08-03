@@ -6,7 +6,7 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Greedy;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="play", description="/play <game>", customHelpMessage={ChatUtil.PREFIX + "§8/§7play§8: Provides shortcuts for Hypixel's /play.", ChatUtil.INDENT + "§8Usage: /§7play §8<game>"})
+@Command(value="play", description="/play <game>", customHelpMessage={ChatUtil.PREFIX + "§7/§fplay§7: Provides shortcuts for Hypixel's /play.", ChatUtil.INDENT + "§7Usage: /§fplay §7<game>"})
 public class PlayCommand {
     @Main
     private void handle(@Greedy String game) {

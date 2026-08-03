@@ -10,7 +10,7 @@ import com.ottertree.nevada.util.TaglistUtil;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command;
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 
-@Command(value="view", description="/view [username]", aliases={"v"}, customHelpMessage={ChatUtil.PREFIX + "§8/§7view§8: Check blacklist tags for any player.", ChatUtil.INDENT + "§8Usage: /§7view§8 [username]", ChatUtil.INDENT + "§8Aliases: /§7v"})
+@Command(value="view", description="/view [username]", aliases={"v"}, customHelpMessage={ChatUtil.PREFIX + "§7/§fview§7: Check blacklist tags for any player.", ChatUtil.INDENT + "§7Usage: /§fview§7 [username]", ChatUtil.INDENT + "§7Aliases: /§fv"})
 public class ViewCommand {
     @Main
     private void handle() {
@@ -19,29 +19,29 @@ public class ViewCommand {
     
     @Main
     private void handle(String username) {
-        ChatUtil.send(ChatUtil.PREFIX + "§8Fetching §7" + username + "§8's tags...");
+        ChatUtil.send(ChatUtil.PREFIX + "§7Fetching §f" + username + "§7's tags...");
 
         PlayerUtil.playerExists(username).thenAccept(exists -> {
             if (!exists) {
-                ChatUtil.send(ChatUtil.PREFIX + "§8Player not found");
+                ChatUtil.send(ChatUtil.PREFIX + "§7Player not found");
                 return;
             }
             
             TaglistUtil.getFullTablist(username).thenAccept(tags -> {
                 if (tags.isEmpty()) {
-                    ChatUtil.send(ChatUtil.INDENT + "§8No tags found!");
+                    ChatUtil.send(ChatUtil.INDENT + "§7No tags found!");
                     return;
                 }
                 tags.forEach(tag -> {
-                    ChatUtil.send(ChatUtil.INDENT + "§8Found Urchin tag: §4" + tag.typeTitle + " §7(" + tag.reason + ")");
+                    ChatUtil.send(ChatUtil.INDENT + "§7Found Urchin tag for §f" + username + "§7: §4" + tag.typeTitle + " §7(" + tag.reason + ")");
                 });
             }).exceptionally(e -> {
                 if ((e instanceof CompletionException ? e.getCause() : e) instanceof NevadaException) {
-                    ChatUtil.send(ChatUtil.PREFIX + "§8" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
+                    ChatUtil.send(ChatUtil.PREFIX + "§7" + (e instanceof CompletionException ? e.getCause() : e).getMessage());
                     return null;
                 }
 
-                ChatUtil.send(ChatUtil.PREFIX + "§8Couldn't fetch tags");
+                ChatUtil.send(ChatUtil.PREFIX + "§7Couldn't fetch tags");
                 e.printStackTrace();
                 return null;
             });

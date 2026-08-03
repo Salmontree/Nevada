@@ -11,6 +11,6 @@ import net.minecraft.item.Item;
 public class DebugCommand {
     @Main
     private void handle(int finals) {
-        ChatUtil.send(String.valueOf(Item.itemRegistry.getIDForObject(Minecraft.getMinecraft().thePlayer.getHeldItem().getItem())));
+        // ChatUtil.send(String.valueOf(Item.itemRegistry.getIDForObject(Minecraft.getMinecraft().thePlayer.getHeldItem().getItem())));
     }
 }
