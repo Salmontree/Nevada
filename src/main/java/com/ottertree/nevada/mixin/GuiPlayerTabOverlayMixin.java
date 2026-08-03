@@ -51,12 +51,12 @@ public abstract class GuiPlayerTabOverlayMixin {
 
                             String tablistStatTemp = "";
                             switch (Nevada.config.TabStats_Bedwars_TablistStat) {
-                                case 0: tablistStatTemp = profile.bedwars.displayFinals; break;
-                                case 1: tablistStatTemp = profile.bedwars.displayFKDR; break;
-                                case 2: tablistStatTemp = profile.bedwars.displayWins; break;
-                                case 3: tablistStatTemp = profile.bedwars.displayWLR; break;
-                                case 4: tablistStatTemp = profile.bedwars.displayBeds; break;
-                                case 5: tablistStatTemp = profile.bedwars.displayBBLR; break;
+                                case 0: tablistStatTemp = denickedProfile.bedwars.displayFinals; break;
+                                case 1: tablistStatTemp = denickedProfile.bedwars.displayFKDR; break;
+                                case 2: tablistStatTemp = denickedProfile.bedwars.displayWins; break;
+                                case 3: tablistStatTemp = denickedProfile.bedwars.displayWLR; break;
+                                case 4: tablistStatTemp = denickedProfile.bedwars.displayBeds; break;
+                                case 5: tablistStatTemp = denickedProfile.bedwars.displayBBLR; break;
                             }
                             final String tablistStat = tablistStatTemp;
 
@@ -64,16 +64,17 @@ public abstract class GuiPlayerTabOverlayMixin {
                                 TaglistUtil.getFullTablistCompacted(nwProfile.getId().toString()).thenAccept(taglist -> {
                                     if (!taglist.isEmpty()) taglist += " ";
 
-                                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (profile.bedwars.displayLevel + " ") : "") + taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                                    cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (denickedProfile.bedwars.displayLevel + " ") : "") + taglist + cir.getReturnValue() + " §7(" + denickedProfile.hypixel.displayName + "§8)" + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                                    if (firstDenick)
+                                        ChatUtil.send(ChatUtil.PREFIX + cir.getReturnValue() + " §awas denicked as " + denickedProfile.hypixel.displayName);
+                                    return;
                                 });
                             } else {
-                                cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (profile.bedwars.displayLevel + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                                cir.setReturnValue((Nevada.config.TabStats_Bedwars_ShowStars ? (denickedProfile.bedwars.displayLevel + " ") : "") + cir.getReturnValue() + (Nevada.config.TabStats_Bedwars_ShowStat ? (" §7| " + tablistStat) : ""));
+                                if (firstDenick)
+                                    ChatUtil.send(ChatUtil.PREFIX + cir.getReturnValue() + " §awas denicked as " + denickedProfile.hypixel.displayName);
+                                return;
                             }
-
-                            if (firstDenick)
-                                ChatUtil.send(ChatUtil.PREFIX + cir.getReturnValue() + " §awas denicked as " + denickedProfile.hypixel.displayName);
-
-                            return;
                         }
                     }
 
