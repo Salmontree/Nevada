@@ -129,8 +129,7 @@ public class BedwarsUtil {
         else if (rawFkdr >= 7) code = "§e" + fkdr;
         else if (rawFkdr >= 5) code = "§2" + fkdr;
         else if (rawFkdr >= 3) code = "§a" + fkdr;
-        else if (rawFkdr >= 1) code = "§f" + fkdr;
-        else code = "§7" + fkdr;
+        else code = "§f" + fkdr;
         return code;
     }
     public static String colorFinals(int finals) {
@@ -143,8 +142,7 @@ public class BedwarsUtil {
         else if (finals >= 5000) code = "§e" + finals;
         else if (finals >= 2500) code = "§2" + finals;
         else if (finals >= 1000) code = "§a" + finals;
-        else if (finals >= 500) code = "§f" + finals;
-        else code = "§7" + finals;
+        else code = "§f" + finals;
         return code;
     }
     public static String colorWLR(float rawWlr) {
@@ -158,8 +156,7 @@ public class BedwarsUtil {
         else if (rawWlr >= 2.1) code = "§e" + wlr;
         else if (rawWlr >= 1.5) code = "§2" + wlr;
         else if (rawWlr >= 0.9) code = "§a" + wlr;
-        else if (rawWlr >= 0.3) code = "§f" + wlr;
-        else code = "§7" + wlr;
+        else code = "§f" + wlr;
         return code;
     }
     public static String colorWins(int wins) {
@@ -172,8 +169,7 @@ public class BedwarsUtil {
         else if (wins >= 1500) code = "§e" + wins;
         else if (wins >= 450) code = "§2" + wins;
         else if (wins >= 300) code = "§a" + wins;
-        else if (wins >= 150) code = "§f" + wins;
-        else code = "§7" + wins;
+        else code = "§f" + wins;
         return code;
     }
     public static String colorBBLR(float rawBblr) {
@@ -187,8 +183,7 @@ public class BedwarsUtil {
         else if (rawBblr >= 1.4) code = "§e" + bblr;
         else if (rawBblr >= 1) code = "§2" + bblr;
         else if (rawBblr >= 0.6) code = "§a" + bblr;
-        else if (rawBblr >= 0.2) code = "§f" + bblr;
-        else code = "§7" + bblr;
+        else code = "§f" + bblr;
         return code;
     }
     public static String colorBedsBroken(int beds) {
@@ -201,8 +196,7 @@ public class BedwarsUtil {
         else if (beds >= 2500) code = "§e" + beds;
         else if (beds >= 1250) code = "§2" + beds;
         else if (beds >= 500) code = "§a" + beds;
-        else if (beds >= 250) code = "§f" + beds;
-        else code = "§7" + beds;
+        else code = "§f" + beds;
         return code;
     }
 }
