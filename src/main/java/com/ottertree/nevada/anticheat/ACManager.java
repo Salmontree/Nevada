@@ -6,11 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.ottertree.nevada.anticheat.check.AutoblockCheck;
 import com.ottertree.nevada.anticheat.check.Check;
-import com.ottertree.nevada.anticheat.check.EagleCheck;
-import com.ottertree.nevada.anticheat.check.ScaffoldCheck;
-import com.ottertree.nevada.anticheat.check.TowerCheck;
 
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
