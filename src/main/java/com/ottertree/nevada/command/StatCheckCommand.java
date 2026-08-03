@@ -19,7 +19,7 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main;
 public class StatCheckCommand {
     @Main
     private void handle(String username, @Greedy String gameName) {
-        ChatUtil.send(ChatUtil.PREFIX + "§7Fetching §7" + username + "§7's stats...");
+        ChatUtil.send(ChatUtil.PREFIX + "§7Fetching §f" + username + "§7's stats...");
 
         final String game = gameName.toLowerCase();
         switch (game) {
@@ -45,7 +45,7 @@ public class StatCheckCommand {
                         case "bw": ChatUtil.send(ChatUtil.INDENT + BedwarsUtil.formatLevel(profile.bedwars.level) + " " + taglist + profile.hypixel.displayName + "§7 - Finals: " + BedwarsUtil.colorFinals(profile.bedwars.finalKills) + " §7FKDR: " + BedwarsUtil.colorFKDR(profile.bedwars.getFKDR()) + " §7Wins: " + BedwarsUtil.colorFinals(profile.bedwars.wins) + " §7WLR: " + BedwarsUtil.colorWLR(profile.bedwars.getWLR()) + " §7Beds: " + BedwarsUtil.colorBedsBroken(profile.bedwars.bedsBroken) + " §7BBLR: " + BedwarsUtil.colorBBLR(profile.bedwars.getBBLR())); break;
                         case "bb": ChatUtil.send(ChatUtil.INDENT + BuildBattleUtil.formatScore(profile.buildbattle.score) + " " + taglist + profile.hypixel.displayName + "§7 - Wins: §f" + profile.buildbattle.wins + " §7Solo Wins: §f" + profile.buildbattle.soloWins + " §7Doubles Wins: §f" + profile.buildbattle.doublesWins + " §7GTB Wins: §f" + profile.buildbattle.gtbWins); break;
                         case "duels": ChatUtil.send(ChatUtil.INDENT + taglist + profile.hypixel.displayName + "§7 - Wins: " + DuelsUtil.colorWins(profile.duels.overall.wins) + " §7WLR: " + DuelsUtil.colorWLR(profile.duels.overall.getWLR()) + " §7BWS: " + DuelsUtil.colorBWS(profile.duels.overall.best_winstreak) + " §7WS: " + DuelsUtil.colorWS(profile.duels.overall.winstreak)); break;
-                        case "bridge": ChatUtil.send(ChatUtil.INDENT + taglist + profile.hypixel.displayName + "§7 - Wins: " + DuelsUtil.colorWins(profile.duels.bridge.wins) + " §7WLR: " + DuelsUtil.colorWLR(profile.duels.bridge.getWLR()) +  "§7BWS: " + DuelsUtil.colorBWS(profile.duels.bridge.best_winstreak)); break;
+                        case "bridge": ChatUtil.send(ChatUtil.INDENT + taglist + profile.hypixel.displayName + "§7 - Wins: " + DuelsUtil.colorWins(profile.duels.bridge.wins) + " §7WLR: " + DuelsUtil.colorWLR(profile.duels.bridge.getWLR()) +  " §7BWS: " + DuelsUtil.colorBWS(profile.duels.bridge.best_winstreak)); break;
                     }
                 }).exceptionally(e -> {
                     switch (game) {

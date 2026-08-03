@@ -51,8 +51,7 @@ public class DuelsUtil {
 
     public static String colorWLR(float rawWLR) {
         String val = String.format("%.2f", rawWLR);
-        String code = "§7" + val;
-        if (rawWLR >= 1) code = "§f" + val;
+        String code = "§f" + val;
         if (rawWLR >= 2) code = "§a" + val;
         if (rawWLR >= 3.5) code = "§2" + val;
         if (rawWLR >= 7) code = "§e" + val;
@@ -64,8 +63,7 @@ public class DuelsUtil {
         return code;
     }
     public static String colorWins(int wins) {
-        String code = "§7" + wins;
-        if (wins >= 150) code = "§f" + wins;
+        String code = "§f" + wins;
         if (wins >= 300) code = "§a" + wins;
         if (wins >= 450) code = "§2" + wins;
         if (wins >= 1500) code = "§e" + wins;
@@ -77,8 +75,7 @@ public class DuelsUtil {
         return code;
     }
     public static String colorWS(int ws) {
-        String code = "§7" + ws;
-        if (ws >= 5) code = "§f" + ws;
+        String code = "§f" + ws;
         if (ws >= 10) code = "§a" + ws;
         if (ws >= 20) code = "§2" + ws;
         if (ws >= 50) code = "§e" + ws;
@@ -90,8 +87,7 @@ public class DuelsUtil {
         return code;
     }
     public static String colorBWS(int bws) {
-        String code = "§7" + bws;
-        if (bws >= 5) code = "§f" + bws;
+        String code = "§f" + bws;
         if (bws >= 10) code = "§a" + bws;
         if (bws >= 20) code = "§2" + bws;
         if (bws >= 50) code = "§e" + bws;
