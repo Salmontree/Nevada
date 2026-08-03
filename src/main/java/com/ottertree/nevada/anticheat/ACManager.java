@@ -30,11 +30,6 @@ public class ACManager {
 
     public void initialize() {
         MinecraftForge.EVENT_BUS.register(this);
-
-        checks.add(new AutoblockCheck());
-        checks.add(new EagleCheck());
-        checks.add(new ScaffoldCheck());
-        checks.add(new TowerCheck());
     }
 
     private void runChecks(ACPlayerData player) {
