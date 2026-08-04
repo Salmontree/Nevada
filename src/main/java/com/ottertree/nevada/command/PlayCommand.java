@@ -15,6 +15,7 @@ public class PlayCommand {
             case "bw2": ChatUtil.say("/play bedwars_eight_two"); return;
             case "bw3": ChatUtil.say("/play bedwars_four_three"); return;
             case "bw4": ChatUtil.say("/play bedwars_four_four"); return;
+            case "bw4v4": ChatUtil.say("/play bedwars_two_four"); return;
 
             case "bridge1": ChatUtil.say("/play duels_bridge_duel"); return;
             case "bridge2": ChatUtil.say("/play duels_bridge_doubles"); return;
