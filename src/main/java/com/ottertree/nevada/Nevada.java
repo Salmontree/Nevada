@@ -9,6 +9,7 @@ import com.ottertree.nevada.command.GexpCommand;
 import com.ottertree.nevada.command.PlayCommand;
 import com.ottertree.nevada.command.StatCheckCommand;
 import com.ottertree.nevada.command.ViewCommand;
+import com.ottertree.nevada.command.BedwarsDuelCommand;
 import com.ottertree.nevada.config.NevadaConfig;
 import com.ottertree.nevada.event.InteractEvent;
 import com.ottertree.nevada.event.ChatReceivedEvent;
@@ -44,5 +45,6 @@ public class Nevada {
         CommandManager.register(new PlayCommand());
         CommandManager.register(new StatCheckCommand());
         CommandManager.register(new ViewCommand());
+        CommandManager.register(new BedwarsDuelCommand());
     }
 }
