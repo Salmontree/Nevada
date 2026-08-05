@@ -9,6 +9,8 @@ import cc.polyfrost.oneconfig.config.annotations.Text;
 import cc.polyfrost.oneconfig.config.data.Mod;
 import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.data.OptionSize;
+import cc.polyfrost.oneconfig.config.annotations.HUD;
+import com.ottertree.nevada.hud.BedwarsUpgradesTrapsHUD;
 
 public class NevadaConfig extends Config {
     // Bedwars
@@ -16,6 +18,9 @@ public class NevadaConfig extends Config {
     public boolean Bedwars_AntiObbyMisplace = false;
     @Switch(name="Only Enable Anti-Obby Misplace in Bedwars", category="Bedwars", subcategory="Bed Defense")
     public boolean Bedwars_AntiObbyMisplace_OnlyInBedwars = true;
+
+    @HUD(name = "Bedwars Upgrades/Traps", category = "Bedwars")
+    public BedwarsUpgradesTrapsHUD upgradesTrapsHud = new BedwarsUpgradesTrapsHUD();
 
     @Switch(name="Enable Tab Stats", category="Bedwars", subcategory="Tab Stats")
     public boolean TabStats_Bedwars_Enable = true;
