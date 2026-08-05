@@ -43,7 +43,7 @@ public class BedwarsUpgradesTrapsManager {
         String cleaned = cleanMessage(message);
         if (!cleaned.toLowerCase().contains("purchased")) return;
 
-        String[] parts = cleaned.split("purchased");
+        String[] parts = cleaned.split("(?i)purchased");
         if (parts.length < 2) return;
 
         String item = parts[1].trim();
@@ -51,7 +51,7 @@ public class BedwarsUpgradesTrapsManager {
         item = item.replaceAll("[.!?]+$", "").trim();
 
         if (item.toLowerCase().contains("trap")) {
-            activeTraps.add(item.trim());
+            activeTraps.add(normalize(item));
             return;
         }
         if (item.toLowerCase().startsWith("sharpened swords")) {
@@ -69,7 +69,7 @@ public class BedwarsUpgradesTrapsManager {
             maniacMiner = Math.max(maniacMiner, level > 0 ? level : 1);
             return;
         }
-        if (item.toLowerCase().startsWith("cushioned boots")) {
+        if (item.toLowerCase().startsWith("cushioned boots") || item.toLowerCase().startsWith("cushioned")) {
             int level = extractLevel(item);
             cushionedBoots = Math.max(cushionedBoots, level > 0 ? level : 1);
             return;
@@ -96,7 +96,7 @@ public class BedwarsUpgradesTrapsManager {
         Pattern trapPattern = Pattern.compile("^(.+?)\\s+Trap was set off!$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = trapPattern.matcher(cleaned);
         if (matcher.matches()) {
-            removeTrapFromQueue(matcher.group(1).trim() + " Trap");
+            removeTrapFromQueue(normalize(matcher.group(1).trim()) + " Trap");
             return;
         }
 
@@ -108,17 +108,22 @@ public class BedwarsUpgradesTrapsManager {
         Pattern removePattern = Pattern.compile("^Removed\\s+(.+?)\\s+Trap from the queue!$", Pattern.CASE_INSENSITIVE);
         Matcher removeMatcher = removePattern.matcher(cleaned);
         if (removeMatcher.matches()) {
-            removeTrapFromQueue(removeMatcher.group(1).trim() + " Trap");
+            removeTrapFromQueue(normalize(removeMatcher.group(1).trim()) + " Trap");
         }
     }
 
     private void removeTrapFromQueue(String trapName) {
+        String target = normalize(trapName);
         for (int i = 0; i < activeTraps.size(); i++) {
-            if (activeTraps.get(i).equalsIgnoreCase(trapName)) {
+            if (normalize(activeTraps.get(i)).equalsIgnoreCase(target)) {
                 activeTraps.remove(i);
                 break;
             }
         }
+    }
+
+    private String normalize(String name) {
+        return name.replaceAll("\\s+", " ").trim();
     }
 
     private int extractLevel(String item) {
@@ -146,7 +151,7 @@ public class BedwarsUpgradesTrapsManager {
     }
 
     private String cleanMessage(String message) {
-        return message.replaceAll("§[0-9A-FK-OR]", "").trim();
+        return message.replaceAll("(?i)§[0-9A-FK-OR]", "").trim();
     }
 
     public List<String> getDisplayLinesWithFormatting(
