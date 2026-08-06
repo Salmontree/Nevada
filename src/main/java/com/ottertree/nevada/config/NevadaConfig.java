@@ -62,6 +62,16 @@ public class NevadaConfig extends Config {
     @Switch(name="Only Show Once", category="Pregame")
     public boolean Pregame_OnlyShowOnce = true;
 
+    // Incoming Player Alerts
+    @Switch(name="Enable", category="Incoming Player Alerts", subcategory="General")
+    public boolean IncomingAlert_Enable = false;
+    @Text(name="Alert Message", category="Incoming Player Alerts", subcategory="General")
+    public String IncomingAlert_Message = "inc";
+    @Dropdown(name="Alert Channel", options={"Party Chat", "All Chat"}, category="Incoming Player Alerts", subcategory="General")
+    public int IncomingAlert_Channel = 0; // 0 = Party Chat, 1 = All Chat
+    @Slider(name="Alert Radius", min=10f, max=100f, category="Incoming Player Alerts", subcategory="General")
+    public float IncomingAlert_Radius = 50f;
+
     public NevadaConfig() {
         super(new Mod(Nevada.NAME, ModType.HYPIXEL), Nevada.MODID + ".json");
         initialize();
@@ -82,5 +92,9 @@ public class NevadaConfig extends Config {
         addDependency("Bedwars_AntiObbyMisplace_OnlyInBedwars", "Bedwars_AntiObbyMisplace");
 
         addDependency("Pregame_OnlyShowOnce", "Pregame_ShowPlayerStats");
+
+        addDependency("IncomingAlert_Message", "IncomingAlert_Enable");
+        addDependency("IncomingAlert_Channel", "IncomingAlert_Enable");
+        addDependency("IncomingAlert_Radius", "IncomingAlert_Enable");
     }
 }
