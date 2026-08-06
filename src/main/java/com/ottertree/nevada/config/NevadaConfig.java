@@ -11,6 +11,7 @@ import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.data.OptionSize;
 import cc.polyfrost.oneconfig.config.annotations.HUD;
 import com.ottertree.nevada.hud.BedwarsUpgradesTrapsHUD;
+import cc.polyfrost.oneconfig.config.annotations.Slider;
 
 public class NevadaConfig extends Config {
     // Bedwars
