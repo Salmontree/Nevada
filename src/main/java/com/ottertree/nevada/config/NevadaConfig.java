@@ -9,6 +9,9 @@ import cc.polyfrost.oneconfig.config.annotations.Text;
 import cc.polyfrost.oneconfig.config.data.Mod;
 import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.data.OptionSize;
+import cc.polyfrost.oneconfig.config.annotations.HUD;
+import com.ottertree.nevada.hud.BedwarsUpgradesTrapsHUD;
+import cc.polyfrost.oneconfig.config.annotations.Slider;
 
 public class NevadaConfig extends Config {
     // Bedwars
@@ -16,6 +19,9 @@ public class NevadaConfig extends Config {
     public boolean Bedwars_AntiObbyMisplace = false;
     @Switch(name="Only Enable Anti-Obby Misplace in Bedwars", category="Bedwars", subcategory="Bed Defense")
     public boolean Bedwars_AntiObbyMisplace_OnlyInBedwars = true;
+
+    @HUD(name = "Bedwars Upgrades/Traps", category = "Bedwars")
+    public BedwarsUpgradesTrapsHUD upgradesTrapsHud = new BedwarsUpgradesTrapsHUD();
 
     @Switch(name="Enable Tab Stats", category="Bedwars", subcategory="Tab Stats")
     public boolean TabStats_Bedwars_Enable = true;
@@ -56,6 +62,16 @@ public class NevadaConfig extends Config {
     @Switch(name="Only Show Once", category="Pregame")
     public boolean Pregame_OnlyShowOnce = true;
 
+    // Incoming Player Alerts
+    @Switch(name="Enable", category="Incoming Player Alerts", subcategory="General")
+    public boolean IncomingAlert_Enable = false;
+    @Text(name="Alert Message", category="Incoming Player Alerts", subcategory="General")
+    public String IncomingAlert_Message = "inc";
+    @Dropdown(name="Alert Channel", options={"Party Chat", "All Chat"}, category="Incoming Player Alerts", subcategory="General")
+    public int IncomingAlert_Channel = 0; // 0 = Party Chat, 1 = All Chat
+    @Slider(name="Alert Radius", min=10f, max=100f, category="Incoming Player Alerts", subcategory="General")
+    public float IncomingAlert_Radius = 50f;
+
     public NevadaConfig() {
         super(new Mod(Nevada.NAME, ModType.HYPIXEL), Nevada.MODID + ".json");
         initialize();
@@ -76,5 +92,9 @@ public class NevadaConfig extends Config {
         addDependency("Bedwars_AntiObbyMisplace_OnlyInBedwars", "Bedwars_AntiObbyMisplace");
 
         addDependency("Pregame_OnlyShowOnce", "Pregame_ShowPlayerStats");
+
+        addDependency("IncomingAlert_Message", "IncomingAlert_Enable");
+        addDependency("IncomingAlert_Channel", "IncomingAlert_Enable");
+        addDependency("IncomingAlert_Radius", "IncomingAlert_Enable");
     }
 }

@@ -19,7 +19,7 @@ public class TaglistUtil {
                 String label;
                 String color;
                 switch (tag.type) {
-                    case "confirmed_cheater": label = "CCC"; color = "§d§l"; break; // pink, bold
+                    case "confirmed_cheater": label = "CCC"; color = "§5§l"; break; // pink, bold
                     case "closet_cheater":    label = "CC";  color = "§6";   break; // orange
                     case "blatant_cheater":   label = "BC";  color = "§6§l"; break; // orange, bold
                     case "caution":           label = "C";   color = "§6";   break; // orange
