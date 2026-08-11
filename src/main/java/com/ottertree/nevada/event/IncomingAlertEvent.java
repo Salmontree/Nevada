@@ -1,12 +1,9 @@
 package com.ottertree.nevada.event;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import com.ottertree.nevada.Nevada;
 import com.ottertree.nevada.util.BedwarsUtil;
 import com.ottertree.nevada.util.ChatUtil;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -14,15 +11,12 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 public class IncomingAlertEvent {
-
     private BlockPos spawnPos = null;
     private boolean wasActive = false;
     private int tickCounter = 0;
     private int lastGlobalAlertTick = -1000;
     private final Map<String, Integer> lastAlertTick = new HashMap<>();
-
     private static final int CHECK_INTERVAL = 10;
     private static final int PER_PLAYER_COOLDOWN = 300; // ~15s before re-alerting the same player
     private static final int GLOBAL_COOLDOWN = 60; // ~3s minimum between any two alerts, even for different players
@@ -35,7 +29,6 @@ public class IncomingAlertEvent {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.thePlayer == null || mc.theWorld == null) return;
 
-        // Only active during an actual live match, never in pregame/lobby
         boolean active = BedwarsUtil.inBedwars() && !BedwarsUtil.inPregame();
 
         if (!active) {
@@ -48,6 +41,7 @@ public class IncomingAlertEvent {
         if (!wasActive) {
             spawnPos = mc.thePlayer.getPosition();
             wasActive = true;
+            ChatUtil.send("§7[DEBUG] Alert system activated. spawnPos=" + spawnPos);
         }
 
         if (!Nevada.config.IncomingAlert_Enable) return;
@@ -60,12 +54,19 @@ public class IncomingAlertEvent {
 
         for (EntityPlayer player : mc.theWorld.playerEntities) {
             if (player == mc.thePlayer) continue;
-            if (!isConfirmedEnemy(mc.thePlayer, player)) continue;
+
+            boolean enemy = isConfirmedEnemy(mc.thePlayer, player);
 
             double dx = player.posX - spawnPos.getX();
             double dy = player.posY - spawnPos.getY();
             double dz = player.posZ - spawnPos.getZ();
             double distSq = dx * dx + dy * dy + dz * dz;
+            double dist = Math.sqrt(distSq);
+
+            // TEMP DEBUG - shows every player checked, every check cycle
+            ChatUtil.send("§7[DEBUG] " + player.getName() + " enemy=" + enemy + " dist=" + String.format("%.1f", dist) + "/" + radius);
+
+            if (!enemy) continue;
 
             if (distSq <= radiusSq) {
                 String name = player.getName();
@@ -75,17 +76,19 @@ public class IncomingAlertEvent {
                 lastAlertTick.put(name, tickCounter);
                 lastGlobalAlertTick = tickCounter;
                 sendAlert();
-                return; // only send one alert per check cycle, even if multiple enemies are in range
+                return;
             }
         }
     }
 
-    // Only returns true if we can POSITIVELY confirm the player is on a different team.
-    // If teams aren't set up yet (null), treat as "unknown" - never alert on unknowns, avoids lobby false positives.
     private boolean isConfirmedEnemy(EntityPlayer self, EntityPlayer other) {
         Scoreboard scoreboard = self.getWorldScoreboard();
         ScorePlayerTeam selfTeam = scoreboard.getPlayersTeam(self.getName());
         ScorePlayerTeam otherTeam = scoreboard.getPlayersTeam(other.getName());
+
+        // TEMP DEBUG - shows raw team data
+        ChatUtil.send("§8[DEBUG-TEAM] " + other.getName() + " selfTeam=" + (selfTeam == null ? "null" : selfTeam.getRegisteredName()) + " otherTeam=" + (otherTeam == null ? "null" : otherTeam.getRegisteredName()));
+
         if (selfTeam == null || otherTeam == null) return false;
         return !selfTeam.getRegisteredName().equals(otherTeam.getRegisteredName());
     }
