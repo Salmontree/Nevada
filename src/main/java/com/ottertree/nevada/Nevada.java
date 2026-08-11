@@ -37,14 +37,12 @@ public class Nevada {
         MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
         MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
 
-        CommandManager.register(new BedwarsCommand());
         CommandManager.register(new ClearCacheCommand());
-        CommandManager.register(new DebugCommand());
+        // CommandManager.register(new DebugCommand());
         CommandManager.register(new DenickCommand());
         CommandManager.register(new GexpCommand());
         CommandManager.register(new PlayCommand());
         CommandManager.register(new StatCheckCommand());
         CommandManager.register(new ViewCommand());
-        CommandManager.register(new BedwarsDuelCommand());
     }
 }
