@@ -49,7 +49,22 @@ public class BedwarsUtil {
     public static boolean inActiveGame() {
         return inBedwars() && inGame() && !inPregame();
     }
-    
+
+    // Bedwars Duels shares the exact same "BED WARS" scoreboard title as normal team Bedwars,
+    // so inBedwars() can't tell them apart. This scans the sidebar for "Duel" (visible as
+    // "Mode: Bed Wars Duel") to detect and exclude Duels specifically.
+    public static boolean inBedwarsDuel() {
+        try {
+            Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
+            for (Score score : scoreboard.getSortedScores(scoreboard.getObjectiveInDisplaySlot(1))) {
+                String line = ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName());
+                if (line.contains("Duel")) return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
 
     private static String dynamicLevelColor(String level, String[] colors) {
         StringBuilder result = new StringBuilder();
