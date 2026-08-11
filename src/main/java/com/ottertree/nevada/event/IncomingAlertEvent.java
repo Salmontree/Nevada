@@ -18,8 +18,8 @@ public class IncomingAlertEvent {
     private int lastGlobalAlertTick = -1000;
     private final Map<String, Integer> lastAlertTick = new HashMap<>();
     private static final int CHECK_INTERVAL = 10;
-    private static final int PER_PLAYER_COOLDOWN = 300; // ~15s before re-alerting the same player
-    private static final int GLOBAL_COOLDOWN = 60; // ~3s minimum between any two alerts, even for different players
+    private static final int PER_PLAYER_COOLDOWN = 300;
+    private static final int GLOBAL_COOLDOWN = 60;
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -63,7 +63,6 @@ public class IncomingAlertEvent {
             double distSq = dx * dx + dy * dy + dz * dz;
             double dist = Math.sqrt(distSq);
 
-            // TEMP DEBUG - shows every player checked, every check cycle
             ChatUtil.send("§7[DEBUG] " + player.getName() + " enemy=" + enemy + " dist=" + String.format("%.1f", dist) + "/" + radius);
 
             if (!enemy) continue;
@@ -86,7 +85,6 @@ public class IncomingAlertEvent {
         ScorePlayerTeam selfTeam = scoreboard.getPlayersTeam(self.getName());
         ScorePlayerTeam otherTeam = scoreboard.getPlayersTeam(other.getName());
 
-        // TEMP DEBUG - shows raw team data
         ChatUtil.send("§8[DEBUG-TEAM] " + other.getName() + " selfTeam=" + (selfTeam == null ? "null" : selfTeam.getRegisteredName()) + " otherTeam=" + (otherTeam == null ? "null" : otherTeam.getRegisteredName()));
 
         if (selfTeam == null || otherTeam == null) return false;
