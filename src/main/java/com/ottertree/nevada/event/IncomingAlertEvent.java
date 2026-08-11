@@ -24,7 +24,7 @@ public class IncomingAlertEvent {
     private final Map<String, Integer> lastAlertTick = new HashMap<>();
 
     private static final int CHECK_INTERVAL = 10;
-    private static final int PER_PLAYER_COOLDOWN = 100; // ~5s before re-alerting the same player
+    private static final int PER_PLAYER_COOLDOWN = 300; // ~15s before re-alerting the same player
     private static final int GLOBAL_COOLDOWN = 60; // ~3s minimum between any two alerts, even for different players
 
     @SubscribeEvent
