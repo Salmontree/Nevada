@@ -22,9 +22,17 @@ public class IncomingAlertEvent {
     private static final int GLOBAL_COOLDOWN = 60;
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        tickCounter++;
+public void onClientTick(TickEvent.ClientTickEvent event) {
+    if (event.phase != TickEvent.Phase.END) return;
+
+    Minecraft mc = Minecraft.getMinecraft();
+
+    if (mc.thePlayer == null || mc.theWorld == null) return;
+
+    ChatUtil.send("§c[DEBUG] IncomingAlertEvent is running!");
+
+    tickCounter++;
+
 
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.thePlayer == null || mc.theWorld == null) return;
