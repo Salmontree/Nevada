@@ -50,6 +50,19 @@ public class BedwarsUtil {
         return inBedwars() && inGame() && !inPregame();
     }
     
+	public static boolean inDuel() {
+        try {
+            Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
+            for (Score score : scoreboard.getSortedScores(scoreboard.getObjectiveInDisplaySlot(1))) {
+                if (inBedwars() && ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName()).contains("Duel"))
+                    return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
 
     private static String dynamicLevelColor(String level, String[] colors) {
         StringBuilder result = new StringBuilder();
