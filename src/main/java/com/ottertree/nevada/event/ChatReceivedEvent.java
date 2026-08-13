@@ -59,17 +59,21 @@ public class ChatReceivedEvent {
         });
     }
 
-    // If someone in the lobby says your username in chat, automatically show their stats -
-    // same as if you'd run /bw on them yourself.
     private void mentionStatsLookup(String text) {
         if (!Nevada.config.Lobby_ShowStatsWhenMentioned) return;
-        if (!BedwarsUtil.inLobby()) {
+
+        boolean inLobby = BedwarsUtil.inLobby();
+        ChatUtil.send("§7[DEBUG] inLobby=" + inLobby + " text=" + text.replace("§", "&"));
+
+        if (!inLobby) {
             if (!mentionedByPlayers.isEmpty()) mentionedByPlayers.clear();
             return;
         }
 
         Matcher matcher = playerMessagePattern.matcher(text);
-        if (!matcher.matches()) return;
+        boolean matched = matcher.matches();
+        ChatUtil.send("§7[DEBUG] regexMatched=" + matched);
+        if (!matched) return;
 
         String sender = matcher.group(3);
         String message = matcher.group(4);
@@ -77,10 +81,18 @@ public class ChatReceivedEvent {
         if (Minecraft.getMinecraft().thePlayer == null) return;
         String ownName = Minecraft.getMinecraft().thePlayer.getName();
 
-        if (sender.equalsIgnoreCase(ownName)) return;
-        if (message == null || !message.toLowerCase().contains(ownName.toLowerCase())) return;
+        ChatUtil.send("§7[DEBUG] sender=" + sender + " message=" + message + " ownName=" + ownName);
 
-        if (mentionedByPlayers.contains(sender)) return;
+        if (sender.equalsIgnoreCase(ownName)) return;
+        if (message == null || !message.toLowerCase().contains(ownName.toLowerCase())) {
+            ChatUtil.send("§7[DEBUG] name not found in message, skipping");
+            return;
+        }
+
+        if (mentionedByPlayers.contains(sender)) {
+            ChatUtil.send("§7[DEBUG] already alerted for this sender, skipping");
+            return;
+        }
         mentionedByPlayers.add(sender);
 
         PlayerUtil.playerExists(sender).thenAccept(exists -> {
