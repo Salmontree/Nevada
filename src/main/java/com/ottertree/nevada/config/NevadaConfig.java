@@ -14,6 +14,10 @@ import com.ottertree.nevada.hud.BedwarsUpgradesTrapsHUD;
 import cc.polyfrost.oneconfig.config.annotations.Slider;
 
 public class NevadaConfig extends Config {
+    // Lobby
+    @Switch(name="Auto-show Stats When Mentioned", category="Lobby")
+    public boolean Lobby_ShowStatsWhenMentioned = true;
+
     // Bedwars
     @Switch(name="Anti-Obby Misplace", category="Bedwars", subcategory="Bed Defense")
     public boolean Bedwars_AntiObbyMisplace = false;
