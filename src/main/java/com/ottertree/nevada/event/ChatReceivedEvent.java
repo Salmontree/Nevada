@@ -13,7 +13,7 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ChatReceivedEvent {
     private static final Pattern playerMessagePattern = Pattern.compile("^((?:§.)*(?:(\\[[^\\]]+\\]) (?:§.)*)?(\\w+))(?:§.)*: (.*)$");
-    private static final Pattern lobbyMessagePattern = Pattern.compile("^((?:§.)*(?:\\[[^\\]]+\\](?:§.)*\\s*)*(\\w+))(?:§.)*: (.*)$");
+    private static final Pattern lobbyMessagePattern = Pattern.compile("^((?:§.)*(?:(?:§.)*\\[[^\\]]+\\](?:§.)*\\s*)*(\\w+))(?:§.)*: (.*)$");
 
     private ArrayList<String> checkedPregamePlayers = new ArrayList<>();
     private ArrayList<String> mentionedByPlayers = new ArrayList<>();
