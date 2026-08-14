@@ -69,9 +69,7 @@ public class ChatReceivedEvent {
         }
 
         Matcher matcher = lobbyMessagePattern.matcher(text);
-        boolean matched = matcher.matches();
-        ChatUtil.send("§7[DEBUG] matched=" + matched + " text=" + text.replace("§", "&"));
-        if (!matched) return;
+        if (!matcher.matches()) return;
 
         String sender = matcher.group(2);
         String message = matcher.group(3);
@@ -79,18 +77,10 @@ public class ChatReceivedEvent {
         if (Minecraft.getMinecraft().thePlayer == null) return;
         String ownName = Minecraft.getMinecraft().thePlayer.getName();
 
-        ChatUtil.send("§7[DEBUG] sender=" + sender + " message=" + message + " ownName=" + ownName);
-
         if (sender.equalsIgnoreCase(ownName)) return;
-        if (message == null || !message.toLowerCase().contains(ownName.toLowerCase())) {
-            ChatUtil.send("§7[DEBUG] name not in message, skipping");
-            return;
-        }
+        if (message == null || !message.toLowerCase().contains(ownName.toLowerCase())) return;
 
-        if (mentionedByPlayers.contains(sender)) {
-            ChatUtil.send("§7[DEBUG] already alerted this sender, skipping");
-            return;
-        }
+        if (mentionedByPlayers.contains(sender)) return;
         mentionedByPlayers.add(sender);
 
         PlayerUtil.playerExists(sender).thenAccept(exists -> {
