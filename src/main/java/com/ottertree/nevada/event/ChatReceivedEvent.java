@@ -13,6 +13,8 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ChatReceivedEvent {
     private static final Pattern playerMessagePattern = Pattern.compile("^((?:§.)*(?:(\\[[^\\]]+\\]) (?:§.)*)?(\\w+))(?:§.)*: (.*)$");
+    private static final Pattern lobbyMessagePattern = Pattern.compile("^((?:§.)*(?:\\[[^\\]]+\\](?:§.)*\\s*)*(\\w+))(?:§.)*: (.*)$");
+
     private ArrayList<String> checkedPregamePlayers = new ArrayList<>();
     private ArrayList<String> mentionedByPlayers = new ArrayList<>();
 
@@ -61,22 +63,18 @@ public class ChatReceivedEvent {
 
     private void mentionStatsLookup(String text) {
         if (!Nevada.config.Lobby_ShowStatsWhenMentioned) return;
-
-        boolean inLobby = BedwarsUtil.inLobby();
-        ChatUtil.send("§7[DEBUG] inLobby=" + inLobby + " text=" + text.replace("§", "&"));
-
-        if (!inLobby) {
+        if (!BedwarsUtil.inLobby()) {
             if (!mentionedByPlayers.isEmpty()) mentionedByPlayers.clear();
             return;
         }
 
-        Matcher matcher = playerMessagePattern.matcher(text);
+        Matcher matcher = lobbyMessagePattern.matcher(text);
         boolean matched = matcher.matches();
-        ChatUtil.send("§7[DEBUG] regexMatched=" + matched);
+        ChatUtil.send("§7[DEBUG] matched=" + matched + " text=" + text.replace("§", "&"));
         if (!matched) return;
 
-        String sender = matcher.group(3);
-        String message = matcher.group(4);
+        String sender = matcher.group(2);
+        String message = matcher.group(3);
 
         if (Minecraft.getMinecraft().thePlayer == null) return;
         String ownName = Minecraft.getMinecraft().thePlayer.getName();
@@ -85,12 +83,12 @@ public class ChatReceivedEvent {
 
         if (sender.equalsIgnoreCase(ownName)) return;
         if (message == null || !message.toLowerCase().contains(ownName.toLowerCase())) {
-            ChatUtil.send("§7[DEBUG] name not found in message, skipping");
+            ChatUtil.send("§7[DEBUG] name not in message, skipping");
             return;
         }
 
         if (mentionedByPlayers.contains(sender)) {
-            ChatUtil.send("§7[DEBUG] already alerted for this sender, skipping");
+            ChatUtil.send("§7[DEBUG] already alerted this sender, skipping");
             return;
         }
         mentionedByPlayers.add(sender);
