@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import com.ottertree.nevada.api.Urchin;
 import com.ottertree.nevada.data.Tag;
+
 public class TaglistUtil {
     public static CompletableFuture<List<Tag>> getFullTablist(String player) {
         return Urchin.INSTANCE.getPlayerTaglist(player).thenApply(ArrayList::new);
@@ -23,7 +24,7 @@ public class TaglistUtil {
                     default:                  result.append("§c[" + tag.typeAbbrv + "§r§c] "); break;
                 }
             });
-            return result.toString().trim();
+			return result.toString().trim();
         });
     }
 }
