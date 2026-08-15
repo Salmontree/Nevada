@@ -8,8 +8,8 @@ import net.minecraft.util.ChatComponentText;
 public class ChatUtil {
     private static final Minecraft mc = Minecraft.getMinecraft();
     
-    public static final String PREFIX = "§r§8[§5" + Nevada.NAME + "§8] §r";
-    public static final String INDENT = "§r§8[§5" + Nevada.NAME + "§8] §r"; // "§r  §5▌ §r";
+    public static final String PREFIX = "§0[§lD§r§0] §r";
+    public static final String INDENT = "§0[§lD§r§0] §r"; // "§r  §5▌ §r";
 
     public static void send(String text) {
         mc.thePlayer.addChatMessage(new ChatComponentText(text));

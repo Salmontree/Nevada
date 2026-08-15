@@ -14,6 +14,7 @@ import com.ottertree.nevada.config.NevadaConfig;
 import com.ottertree.nevada.event.InteractEvent;
 import com.ottertree.nevada.event.ChatReceivedEvent;
 import com.ottertree.nevada.event.WorldLoadEvent;
+import com.ottertree.nevada.event.IncomingAlertEvent;
 
 import cc.polyfrost.oneconfig.utils.commands.CommandManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,6 +37,8 @@ public class Nevada {
         MinecraftForge.EVENT_BUS.register(new InteractEvent());
         MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
         MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
+        MinecraftForge.EVENT_BUS.register(new IncomingAlertEvent());
+
 
         CommandManager.register(new BedwarsCommand());
         CommandManager.register(new ClearCacheCommand());

@@ -49,8 +49,8 @@ public class BedwarsUtil {
     public static boolean inActiveGame() {
         return inBedwars() && inGame() && !inPregame();
     }
-    
-	public static boolean inDuel() {
+
+    public static boolean inDuel() {
         try {
             Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
             for (Score score : scoreboard.getSortedScores(scoreboard.getObjectiveInDisplaySlot(1))) {
@@ -62,7 +62,6 @@ public class BedwarsUtil {
         }
         return false;
     }
-
 
     private static String dynamicLevelColor(String level, String[] colors) {
         StringBuilder result = new StringBuilder();
