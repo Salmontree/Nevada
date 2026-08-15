@@ -8,6 +8,7 @@ import com.ottertree.nevada.util.BedwarsUtil;
 import com.ottertree.nevada.util.ChatUtil;
 import com.ottertree.nevada.util.PlayerUtil;
 import com.ottertree.nevada.util.TaglistUtil;
+import com.ottertree.nevada.util.bedwars.BedwarsUpgradesTrapsManager;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,12 +18,14 @@ public class ChatReceivedEvent {
 
     private ArrayList<String> checkedPregamePlayers = new ArrayList<>();
     private ArrayList<String> mentionedByPlayers = new ArrayList<>();
+    private boolean wasInBedwars = false;
 
     @SubscribeEvent
     public void onChatReceived(ClientChatReceivedEvent event) {
         String text = event.message.getFormattedText();
         pregameStatsLookup(text);
         mentionStatsLookup(text);
+        upgradesTrapsTracking(text);
     }
 
     private void pregameStatsLookup(String text) {
@@ -104,5 +107,19 @@ public class ChatReceivedEvent {
                 });
             });
         });
+    }
+
+    private void upgradesTrapsTracking(String text) {
+        boolean inBedwars = BedwarsUtil.inBedwars();
+
+        if (inBedwars && !wasInBedwars) {
+            BedwarsUpgradesTrapsManager.getInstance().resetUpgradesAndTraps();
+        }
+        wasInBedwars = inBedwars;
+
+        if (!inBedwars) return;
+
+        BedwarsUpgradesTrapsManager.getInstance().processPurchaseMessage(text);
+        BedwarsUpgradesTrapsManager.getInstance().processTrapTriggeredMessage(text);
     }
 }
